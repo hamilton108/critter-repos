@@ -230,7 +230,7 @@
         update stockmarket.critter set status=9, sale_id=#{saleId} where oid=#{oid}
     </update>
     <update id="registerPurchaseFullySold"
-            parameterType="critterrepos.beans.options.OptionPurchaseBean"
+            parameterType="critterrepos.beans.options.OptionPurchase"
             flushCache="true"
             statementType="PREPARED">
         update stockmarket.optionpurchase set status=2 where oid=#{oid}

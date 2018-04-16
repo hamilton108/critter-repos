@@ -1,6 +1,7 @@
 package critterrepos.models.mybatis;
 
 
+import oahu.financial.OptionPurchase;
 import org.apache.ibatis.annotations.Param;
 import critterrepos.beans.critters.*;
 import critterrepos.beans.options.OptionPurchaseBean;
@@ -48,7 +49,7 @@ public interface CritterMapper {
 
     void registerCritterClosedWithSale(CritterBean critter);
 
-    void registerPurchaseFullySold(OptionPurchaseBean purchase);
+    void registerPurchaseFullySold(OptionPurchase purchase);
 
     void insertCritterSale(OptionSaleBean sale);
 }
