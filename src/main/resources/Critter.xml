@@ -34,7 +34,7 @@
             <result column="c_purchase_id" property="purchaseId" />
             <result column="c_status" property="status" />
             <collection column="c_oid"
-                        property="acceptrules"
+                        property="acceptRules"
                         ofType="critterrepos.beans.critters.AcceptRuleBean"
                         javaType="java.util.ArrayList">
                 <id column="a_oid" property="oid"/>
