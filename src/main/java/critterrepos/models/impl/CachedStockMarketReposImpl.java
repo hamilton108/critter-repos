@@ -1,5 +1,6 @@
 package critterrepos.models.impl;
 
+import oahu.financial.Stock;
 import oahu.financial.StockPrice;
 import org.apache.log4j.Logger;
 
@@ -9,6 +10,7 @@ import java.util.HashMap;
 
 public class CachedStockMarketReposImpl extends StockMarketReposImpl {
     private HashMap<String, Collection<StockPrice>> prices = new HashMap<>();
+    private Collection<Stock> stocks;
 
     Logger log = Logger.getLogger(getClass().getPackage().getName());
 
@@ -29,5 +31,14 @@ public class CachedStockMarketReposImpl extends StockMarketReposImpl {
             log.info(String.format("Returning cached stock prices for ticker %s", ticker));
         }
         return curPrices;
+    }
+
+
+    @Override
+    public Collection<Stock> getStocks() {
+        if (stocks == null) {
+            stocks = super.getStocks();
+        }
+        return stocks;
     }
 }
