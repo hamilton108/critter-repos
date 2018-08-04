@@ -207,6 +207,11 @@ public class StockMarketReposImpl implements StockMarketRepository {
         });
     }
 
+    @Override
+    public String getTickerFor(int oid) {
+        return null;
+    }
+
     private void populate() {
         idLookup = new HashMap<>();
         tickerLookup = new HashMap<>();
