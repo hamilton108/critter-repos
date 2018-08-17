@@ -122,6 +122,11 @@ public class DerivativePriceBean implements DerivativePrice {
     }
 
     @Override
+    public int getStockId() {
+        return stockPrice == null ? -1 : stockPrice.getStockId();
+    }
+
+    @Override
     public void setOid(int oid) {
         this.oid = oid;
     }

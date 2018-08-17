@@ -73,6 +73,7 @@ public class StockPriceBean implements StockPrice {
         return stock;
     }
 
+    @Override
     public int getStockId() {
         return stock == null ? -1 : stock.getOid();
     }
