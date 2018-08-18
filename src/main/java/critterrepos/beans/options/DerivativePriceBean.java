@@ -11,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class DerivativePriceBean implements DerivativePrice {
+    private static boolean DEBUG = true;
     private Derivative derivative;
     private StockPrice stockPrice;
     private double buy;
@@ -164,12 +165,17 @@ public class DerivativePriceBean implements DerivativePrice {
 
     @Override
     public double getDays() {
-        LocalDate dx = getStockPrice().getLocalDx();
+        if (DEBUG) {
+            return 209;
+        }
+        else {
+            LocalDate dx = getStockPrice().getLocalDx();
 
-        //LocalDate x = getDerivative().getExpiry().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate x = getDerivative().getExpiry();
+            //LocalDate x = getDerivative().getExpiry().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate x = getDerivative().getExpiry();
 
-        return ChronoUnit.DAYS.between(dx,x);
+            return ChronoUnit.DAYS.between(dx, x);
+        }
     }
 
     private Optional<Double> _ivBuy = null;
