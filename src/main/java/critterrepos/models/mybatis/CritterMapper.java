@@ -14,8 +14,10 @@ public interface CritterMapper {
     void toggleAcceptRule(@Param("oid") int oid, @Param("isActive") String isActive);
     void toggleDenyRule(@Param("oid") int oid, @Param("isActive") String isActive);
 
+    /*
     List<OptionPurchaseBean> activePurchases(@Param("tickerIds") List<Integer> tickerIds,
                                                    @Param("purchaseType") int purchaseType);
+                                                   */
 
     List<OptionPurchaseBean> activePurchasesAll(@Param("purchaseType") int purchaseType);
 
