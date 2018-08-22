@@ -208,6 +208,11 @@ public class StockMarketReposImpl implements StockMarketRepository {
     }
 
     @Override
+    public Collection<OptionPurchase> purchasesWithSalesAll(int purchaseType, int status, Derivative.OptionType ot) {
+        return null;
+    }
+
+    @Override
     public String getTickerFor(int oid) {
         return null;
     }
