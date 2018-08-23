@@ -208,7 +208,18 @@ public class StockMarketReposImpl implements StockMarketRepository {
     }
 
     @Override
-    public Collection<OptionPurchase> purchasesWithSalesAll(int purchaseType, int status, Derivative.OptionType ot) {
+    public Collection<OptionPurchase> purchasesWithSalesAll(
+        int purchaseType,
+        int status,
+        Derivative.OptionType ot) {
+          /*
+        return MyBatisUtils.withSession((session) -> {
+            return session.getMapper(CritterMapper.class).purchasesWithSalesAll(
+                purchaseType,
+                status,
+                null);
+        });
+        */
         return null;
     }
 
