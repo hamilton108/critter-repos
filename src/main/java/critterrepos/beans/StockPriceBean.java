@@ -36,7 +36,7 @@ public class StockPriceBean implements StockPrice {
                           double hi,
                           double lo,
                           double cls,
-                          int volume) {
+                          long volume) {
         this(dx.toLocalDate(), opn, hi, lo, cls, volume);
     }
     public StockPriceBean(LocalDate dx,
@@ -44,7 +44,7 @@ public class StockPriceBean implements StockPrice {
                           double hi,
                           double lo,
                           double cls,
-                          int volume) {
+                          long volume) {
         this.localDx = dx;
         this.opn = opn;
         this.hi = hi;
@@ -58,7 +58,7 @@ public class StockPriceBean implements StockPrice {
                           double hi,
                           double lo,
                           double cls,
-                          int volume) {
+                          long volume) {
         this(dx,opn,hi,lo,cls,volume);
         this.setTm(tm);
     }
