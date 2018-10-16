@@ -23,7 +23,7 @@ public class StockPriceBean implements StockPrice {
     private double lo;
     private double cls;
     private double marketValue;
-    private int volume;
+    private long volume;
     private int oid = -1;
     private List<DerivativePrice> optionPrices;
 
@@ -168,10 +168,10 @@ public class StockPriceBean implements StockPrice {
     }
 
     @Override
-    public int getVolume() {
+    public long getVolume() {
         return volume;
     }
-    public void setVolume(int value) {
+    public void setVolume(long value) {
         volume = value;
     }
 
