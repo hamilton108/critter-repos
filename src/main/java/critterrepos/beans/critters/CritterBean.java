@@ -2,11 +2,14 @@ package critterrepos.beans.critters;
 
 import oahu.financial.critters.Critter;
 import oahu.financial.critters.SellRuleArgs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CritterBean implements Critter {
+    private static Logger logger = LoggerFactory.getLogger(Critter.class);
     private int oid;
     private String name;
     private int sellVolume;
@@ -111,7 +114,12 @@ public class CritterBean implements Critter {
         });
         */
         for (AcceptRuleBean acc : getAcceptRules()) {
+            if (acc.getActive().equals("n")) {
+                logger.info(String.format("[Acc %d - %s] Accept rule inactive."), acc.getOid(),acc.getRtypDesc());
+                continue;
+            }
             if (acc.pass(args) == true) {
+                logger.info(String.format("[Acc %d] Rule passes", acc.getOid()));
                return true;
             }
         }

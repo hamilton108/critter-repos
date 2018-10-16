@@ -1,6 +1,9 @@
 package critterrepos.beans.critters;
 
+import oahu.financial.critters.RuleType;
 import oahu.financial.critters.SellRuleArgs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ public class AcceptRuleBean extends AbstractRule {
     description | rule_desc    |
     cid         | critter_id   |
     */
+    private static Logger logger = LoggerFactory.getLogger(AcceptRuleBean.class);
     private int oid;
     private int cid;
     private double accValue;
@@ -100,10 +104,21 @@ public class AcceptRuleBean extends AbstractRule {
     }
 
 
+    private void logPass(double argVal) {
+        logger.info(String.format("[Acc %d - %s] Pass: argVal %.2f > accValue %.2f",
+                getOid(),
+                getRtypDesc(),
+                argVal,
+                accValue));
+    }
     //---------------- pass -----------------
     public boolean pass(SellRuleArgs args) {
         if (denyRules != null) {
             for (DenyRuleBean dny : denyRules) {
+                if (dny.getActive().equals("n")) {
+                    logger.info(String.format("[Dny %d - %s] Deny rule inactive."), dny.getOid(),dny.getRtypDesc());
+                    continue;
+                }
                 if (dny.block(args)) {
                     return false;
                 }
@@ -113,6 +128,7 @@ public class AcceptRuleBean extends AbstractRule {
         switch (getRtypEnum()) {
             case DFW: {
                 if (args.getDiffFromWatermark() > accValue) {
+                    logPass(args.getDiffFromWatermark());
                     return true;
                 }
                 return false;
@@ -122,6 +138,7 @@ public class AcceptRuleBean extends AbstractRule {
             }
             case DFB: {
                 if (args.getDiffFromBought() > accValue) {
+                    logPass(args.getDiffFromBought());
                     return true;
                 }
                 return false;
