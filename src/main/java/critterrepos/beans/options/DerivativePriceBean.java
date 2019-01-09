@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class DerivativePriceBean implements DerivativePrice {
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     private Derivative derivative;
     private StockPrice stockPrice;
     private double buy;
