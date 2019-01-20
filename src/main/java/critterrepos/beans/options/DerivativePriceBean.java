@@ -70,15 +70,15 @@ public class DerivativePriceBean implements DerivativePrice {
     }
 
     private double _currentRiscOptionValue;
-    private Optional<Double> _currentRiscStockPrice;
+    private Double _currentRiscStockPrice = null;
     @Override
     public Optional<Double> stockPriceFor(double optionValue) {
         try {
             //Double result = calculator.stockPriceFor(getSell() - optionValue,this);
             Double result = calculator.stockPriceFor(optionValue,this);
             _currentRiscOptionValue = optionValue;
-            _currentRiscStockPrice = Optional.of(result);
-            return _currentRiscStockPrice;
+            _currentRiscStockPrice = result;
+            return Optional.of(_currentRiscStockPrice);
         }
         catch (BinarySearchException ex) {
             System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
@@ -93,10 +93,11 @@ public class DerivativePriceBean implements DerivativePrice {
         _currentRiscOptionValue = derivative.getOpType() == Derivative.OptionType.CALL ?
                 calculator.callPrice(stockPrice,strike,expiry,_ivBuy.get()) :
                 calculator.putPrice(stockPrice,strike,expiry,_ivBuy.get());
-        _currentRiscStockPrice = Optional.of(stockPrice);
+        _currentRiscStockPrice = stockPrice;
         return _currentRiscOptionValue;
     }
 
+    @Override
     public double getCurrentRiscOptionValue() {
         return _currentRiscOptionValue;
     }
@@ -110,11 +111,19 @@ public class DerivativePriceBean implements DerivativePrice {
         return sell - _currentRiscOptionValue;
     }
 
+    @Override
     public Optional<Double> getCurrentRiscStockPrice(){
         if (_currentRiscStockPrice == null) {
-            _currentRiscStockPrice = Optional.empty();
+            return Optional.empty();
         }
-        return _currentRiscStockPrice;
+        else {
+            return Optional.of(_currentRiscStockPrice);
+        }
+    }
+
+    @Override
+    public void resetRiscCalc() {
+        _currentRiscStockPrice = null;
     }
 
     @Override
