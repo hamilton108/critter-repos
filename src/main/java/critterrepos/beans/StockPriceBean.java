@@ -13,8 +13,6 @@ import java.util.List;
 //import org.joda.time.DateMidnight;
 
 public class StockPriceBean implements StockPrice {
-
-
     //private SimpleStringProperty ticker = new SimpleStringProperty();
     private LocalDate localDx;
     private LocalTime tm;
@@ -205,28 +203,48 @@ public class StockPriceBean implements StockPrice {
         return getStock().getOid();
     }
 
-
-    /*
     @Override
-    public int compareTo(Object other) {
-        return localDx.compareTo(((StockPriceBean)other).getLocalDx());
-    }
-    //*/
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
 
-    //endregion Non-interface Properties
+        if (!(obj instanceof StockPriceBean)) return false;
 
-    //region Diverse Utilities
-      /*
-    public void assign(StockPriceBean other) {
-        this.stockTicker = other.stockTicker;
-        this.tickerId = other.tickerId;
-        this.setOpn(other.getOpn());
-        this.setHi(other.getHi());
-        this.setLo(other.getLo());
-        this.setCls(other.getCls());
-        this.setVolume(other.getVolume());
-        this.setDx(other.getDx());
+        if (obj == this) return true;
+
+        StockPriceBean other = (StockPriceBean)obj;
+
+        if (!localDx.isEqual(other.getLocalDx())) {
+            return false;
+        }
+        if (tm != null) {
+            if (other.getTm() == null)   {
+                return false;
+            }
+            if (!tm.equals(other.getTm())) {
+                return false;
+            }
+        }
+        if (!isEqual(opn,other.getOpn())) {
+            return false;
+        }
+        if (!isEqual(hi,other.getHi())) {
+            return false;
+        }
+        if (!isEqual(lo,other.getLo())) {
+            return false;
+        }
+        if (!isEqual(cls,other.getCls())) {
+            return false;
+        }
+        if (volume != other.volume) {
+            return false;
+        }
+        return true;
     }
-    */
+    private static final double TOLERANCE = 0.01;
+    private boolean isEqual(double v1, double v2) {
+        double diff = Math.abs(v1 - v2);
+        return diff < TOLERANCE;
+    }
     //endregion
 }
