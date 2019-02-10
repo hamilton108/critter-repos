@@ -16,7 +16,8 @@ public class DenyRuleBean extends AbstractRule {
     private double denyValue;
     private String rtypDesc;
     private String active = "y";
-    private String memory;
+    private boolean memory;
+    private boolean isBlocked = false;
 
     public DenyRuleBean() {
     }
@@ -30,7 +31,7 @@ public class DenyRuleBean extends AbstractRule {
         this.denyValue = denyValue;
         this.rtyp = rtyp;
         this.active = active;
-        this.memory = memory;
+        setMemory(memory);
     }
 
     public DenyRuleBean(int oid,
@@ -75,7 +76,7 @@ public class DenyRuleBean extends AbstractRule {
         this.rtyp = rtyp;
     }
 
-    //---------------- oid ----------------
+    //---------------- active ----------------
     public String getActive() {
         return active;
     }
@@ -84,13 +85,18 @@ public class DenyRuleBean extends AbstractRule {
         this.active = active;
     }
 
-    //---------------- oid ----------------
+    //---------------- memory ----------------
     public String getMemory() {
-        return memory;
+        if (memory) {
+            return "y";
+        }
+        else {
+            return "n";
+        }
     }
 
     public void setMemory(String memory) {
-        this.memory = memory;
+        this.memory = memory.equals("y");
     }
 
     public String getRtypDesc() {
@@ -103,27 +109,42 @@ public class DenyRuleBean extends AbstractRule {
 
     //---------------- block -----------------
     public boolean block(SellRuleArgs args) {
+        if (isBlocked) {
+            return true;
+        }
         switch (getRtypEnum()) {
             case SP_FLOOR: {
                 if (args.getSpot() > denyValue) {
+                    if (memory) {
+                        isBlocked = true;
+                    }
                     return true;
                 }
                 return false;
             }
             case SP_ROOF: {
                 if (args.getSpot() < denyValue) {
+                    if (memory) {
+                        isBlocked = true;
+                    }
                     return true;
                 }
                 return false;
             }
             case OP_FLOOR: {
                 if (args.getOptionPrice() > denyValue) {
+                    if (memory) {
+                        isBlocked = true;
+                    }
                     return true;
                 }
                 return false;
             }
             case OP_ROOF: {
                 if (args.getOptionPrice() < denyValue) {
+                    if (memory) {
+                        isBlocked = true;
+                    }
                     return true;
                 }
                 return false;
