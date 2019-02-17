@@ -1,17 +1,20 @@
 package critterrepos.beans.options;
 
 import oahu.dto.Tuple;
+import oahu.dto.Tuple3;
 import oahu.financial.*;
 import oahu.financial.critters.Critter;
 import oahu.financial.critters.SellRuleArgs;
 import oahu.financial.repository.ChachedEtradeRepository;
 import critterrepos.beans.critters.CritterBean;
+import oahu.financial.repository.EtradeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +41,8 @@ public class OptionPurchaseBean implements OptionPurchase {
     //private Derivative myDerivative;
 
     // private EtradeRepository<Tuple<String>,Tuple2<String,File>> repository;
-    private ChachedEtradeRepository<Tuple<String>> repository;
+    private EtradeRepository<Tuple<String>,
+            Tuple3<Optional<StockPrice>, Collection<DerivativePrice>,Collection<DerivativePrice>>> repository;
     private List<CritterBean> critters;
     private List<OptionSaleBean> sales;
 
@@ -217,11 +221,11 @@ public class OptionPurchaseBean implements OptionPurchase {
         this.optionType = optionType;
     }
 
-    public ChachedEtradeRepository getRepository() {
+    public EtradeRepository getRepository() {
         return repository;
     }
 
-    public void setRepository(ChachedEtradeRepository repository) {
+    public void setRepository(EtradeRepository repository) {
         this.repository = repository;
     }
 
@@ -237,7 +241,7 @@ public class OptionPurchaseBean implements OptionPurchase {
     }
     */
     public Optional<StockPrice>  getSpot() {
-        return repository.findSpot(ticker);
+        return repository.stockPrice(ticker);
     }
     private Double _watermark = null;
     public Double getWatermark() {
