@@ -17,7 +17,7 @@ public class DerivativePriceBean implements DerivativePrice {
     private double buy;
     private double sell;
     private int oid;
-    protected OptionCalculator calculator;
+    private OptionCalculator calculator;
 
     public DerivativePriceBean() {
     }
@@ -87,13 +87,13 @@ public class DerivativePriceBean implements DerivativePrice {
     }
 
     @Override
-    public double optionPriceFor(double stockPrice) {
+    public double optionPriceFor(double curStockPrice) {
         double strike = derivative.getX();
         double expiry = getDays()/365.0;
         _currentRiscOptionValue = derivative.getOpType() == Derivative.OptionType.CALL ?
-                calculator.callPrice(stockPrice,strike,expiry,_ivBuy.get()) :
-                calculator.putPrice(stockPrice,strike,expiry,_ivBuy.get());
-        _currentRiscStockPrice = stockPrice;
+                calculator.callPrice( curStockPrice,strike,expiry,_ivBuy.get()) :
+                calculator.putPrice( curStockPrice,strike,expiry,_ivBuy.get());
+        _currentRiscStockPrice =  curStockPrice;
         return _currentRiscOptionValue;
     }
 
@@ -224,5 +224,9 @@ public class DerivativePriceBean implements DerivativePrice {
 
     public void setSell(double sell) {
         this.sell = sell;
+    }
+
+    public void setCalculator(OptionCalculator calculator) {
+        this.calculator = calculator;
     }
 }
