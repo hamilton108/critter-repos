@@ -4,7 +4,6 @@ import oahu.exceptions.FinancialException;
 import oahu.financial.*;
 import oahu.financial.repository.StockMarketRepository;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.log4j.Logger;
 import critterrepos.beans.options.DerivativeBean;
 import critterrepos.beans.options.OptionPurchaseBean;
 import critterrepos.beans.options.OptionPurchaseWithDerivativeBean;
@@ -21,7 +20,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class StockMarketReposImpl implements StockMarketRepository {
-    Logger log = Logger.getLogger(getClass().getPackage().getName());
     private HashMap<Integer,Stock> idLookup;
     private HashMap<String,Stock> tickerLookup;
     private List<Stock> stocks;
@@ -51,7 +49,7 @@ public class StockMarketReposImpl implements StockMarketRepository {
             Derivative result = mapper.findDerivative(derivativeTicker);
 
             if (result == null) {
-                log.warn(String.format("[%s] No derivative in database", derivativeTicker));
+                //log.warn(String.format("[%s] No derivative in database", derivativeTicker));
                 return null;
             }
             ((DerivativeBean) result).setStock(idLookup.get(((DerivativeBean) result).getStockId()));
@@ -85,14 +83,14 @@ public class StockMarketReposImpl implements StockMarketRepository {
 
     @Override
     public Collection<StockPrice> findStockPrices(String ticker, LocalDate fromDx) {
-        log.info(String.format("[findStockPrices] ticker: %s, fromDx: %s", ticker, fromDx));
+        //log.info(String.format("[findStockPrices] ticker: %s, fromDx: %s", ticker, fromDx));
         if (tickerLookup == null) {
             populate();
         }
         return MyBatisUtils.withSession((session) -> {
             Stock stock = tickerLookup.get(ticker);
             if (stock == null) {
-                log.warn(String.format("[%s] No stock in database", ticker));
+                //log.warn(String.format("[%s] No stock in database", ticker));
                 return null;
             }
             StockMapper mapper = session.getMapper(StockMapper.class);
