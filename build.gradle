@@ -16,6 +16,7 @@ dependencies {
     compile project(':oahu')
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0'
     runtimeOnly 'org.postgresql:postgresql'
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 bootJar.enabled = false
