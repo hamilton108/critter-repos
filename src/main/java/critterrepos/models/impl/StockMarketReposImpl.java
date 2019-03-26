@@ -38,7 +38,16 @@ public class StockMarketReposImpl implements StockMarketRepository {
 
     @Override
     public Collection<Stock> getStocks() {
-        return null;
+        ArrayList<Stock> result = new ArrayList<>();
+        MyBatisUtils.withSessionConsumer((session) -> {
+            StockMapper mapper = session.getMapper(StockMapper.class);
+
+            List<Stock> tix = mapper.selectStocks();
+            for (Stock b : tix) {
+                result.add(b);
+            }
+        });
+        return result;
     }
 
     @Override
