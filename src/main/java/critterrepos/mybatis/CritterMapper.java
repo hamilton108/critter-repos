@@ -1,23 +1,18 @@
-package critterrepos.models.mybatis;
+package critterrepos.mybatis;
 
 
-import oahu.financial.OptionPurchase;
-import org.apache.ibatis.annotations.Param;
-import critterrepos.beans.critters.*;
-import critterrepos.beans.options.OptionPurchaseBean;
-import critterrepos.beans.options.OptionSaleBean;
-
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 
 
+@Mapper
+public interface CritterMapper {
+
+}
+
+/*
 public interface CritterMapper {
     void toggleAcceptRule(@Param("oid") int oid, @Param("isActive") String isActive);
     void toggleDenyRule(@Param("oid") int oid, @Param("isActive") String isActive);
-
-    /*
-    List<OptionPurchaseBean> activePurchases(@Param("tickerIds") List<Integer> tickerIds,
-                                                   @Param("purchaseType") int purchaseType);
-                                                   */
 
     List<OptionPurchaseBean> activePurchasesAll(@Param("purchaseType") int purchaseType);
 
@@ -55,3 +50,4 @@ public interface CritterMapper {
 
     void insertCritterSale(OptionSaleBean sale);
 }
+*/
