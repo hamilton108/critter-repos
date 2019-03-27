@@ -1,7 +1,6 @@
 package critterrepos.beans.critters;
 
 import oahu.financial.critters.RuleType;
-import org.junit.Rule;
 
 public abstract class AbstractRule {
     protected int rtyp;
