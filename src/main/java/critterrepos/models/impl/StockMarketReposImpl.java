@@ -12,6 +12,7 @@ import critterrepos.mybatis.CritterMapper;
 import critterrepos.mybatis.DerivativeMapper;
 import critterrepos.mybatis.StockMapper;
 import critterrepos.utils.MyBatisUtils;
+import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -19,83 +20,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class StockMarketReposImpl implements StockMarketRepository {
-
-    @Override
-    public void insertDerivative(Derivative derivative, Consumer<Exception> errorHandler) {
-
-    }
-
-    @Override
-    public Optional<Derivative> findDerivative(String derivativeTicker) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Stock findStock(String ticker) {
-        return null;
-    }
-
-    @Override
-    public Collection<Stock> getStocks() {
-        ArrayList<Stock> result = new ArrayList<>();
-        MyBatisUtils.withSessionConsumer((session) -> {
-            StockMapper mapper = session.getMapper(StockMapper.class);
-
-            List<Stock> tix = mapper.selectStocks();
-            for (Stock b : tix) {
-                result.add(b);
-            }
-        });
-        return result;
-    }
-
-    @Override
-    public Collection<StockPrice> findStockPrices(String ticker, LocalDate fromDx) {
-        return null;
-    }
-
-    @Override
-    public void registerOptionPurchase(DerivativePrice purchase, int purchaseType, int volume) {
-
-    }
-
-    @Override
-    public OptionPurchase registerOptionPurchase(int purchaseType, String opName, double price, int volume, double spotAtPurchase, double buyAtPurchase) throws FinancialException {
-        return null;
-    }
-
-    @Override
-    public Collection<SpotOptionPrice> findOptionPrices(int opxId) {
-        return null;
-    }
-
-    @Override
-    public Collection<SpotOptionPrice> findOptionPricesStockId(int stockId, LocalDate fromDate, LocalDate toDate) {
-        return null;
-    }
-
-    @Override
-    public Collection<SpotOptionPrice> findOptionPricesStockIds(List<Integer> stockIds, LocalDate fromDate, LocalDate toDate) {
-        return null;
-    }
-
-    @Override
-    public Collection<SpotOptionPrice> findOptionPricesStockTix(List<String> stockTix, LocalDate fromDate, LocalDate toDate) {
-        return null;
-    }
-
-    @Override
-    public Collection<OptionPurchase> purchasesWithSalesAll(int purchaseType, int status, Derivative.OptionType ot) {
-        return null;
-    }
-
-    @Override
-    public String getTickerFor(int oid) {
-        return null;
-    }
-}
-/*
+@Component
 public class StockMarketReposImpl implements StockMarketRepository {
     private HashMap<Integer,Stock> idLookup;
     private HashMap<String,Stock> tickerLookup;
@@ -126,7 +51,6 @@ public class StockMarketReposImpl implements StockMarketRepository {
             Derivative result = mapper.findDerivative(derivativeTicker);
 
             if (result == null) {
-                //log.warn(String.format("[%s] No derivative in database", derivativeTicker));
                 return null;
             }
             ((DerivativeBean) result).setStock(idLookup.get(((DerivativeBean) result).getStockId()));
@@ -160,14 +84,12 @@ public class StockMarketReposImpl implements StockMarketRepository {
 
     @Override
     public Collection<StockPrice> findStockPrices(String ticker, LocalDate fromDx) {
-        //log.info(String.format("[findStockPrices] ticker: %s, fromDx: %s", ticker, fromDx));
         if (tickerLookup == null) {
             populate();
         }
         return MyBatisUtils.withSession((session) -> {
             Stock stock = tickerLookup.get(ticker);
             if (stock == null) {
-                //log.warn(String.format("[%s] No stock in database", ticker));
                 return null;
             }
             StockMapper mapper = session.getMapper(StockMapper.class);
@@ -315,4 +237,3 @@ public class StockMarketReposImpl implements StockMarketRepository {
         });
     }
 }
-*/

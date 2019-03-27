@@ -1,13 +1,17 @@
 package critterrepos.mybatis;
 
-import org.apache.ibatis.annotations.Mapper;
+import critterrepos.beans.StockPriceBean;
+import critterrepos.beans.options.DerivativeBean;
+import critterrepos.beans.options.DerivativePriceBean;
+import critterrepos.beans.options.SpotOptionPriceSummaryBean;
+import oahu.financial.SpotOptionPrice;
+import oahu.financial.Stock;
+import org.apache.ibatis.annotations.Param;
+
+import java.sql.Date;
+import java.util.List;
 
 
-@Mapper
-public interface DerivativeMapper {
-
-}
-/*
 public interface DerivativeMapper {
     void insertSpot(StockPriceBean s);
     void insertDerivativePrice(DerivativePriceBean d);
@@ -45,7 +49,6 @@ public interface DerivativeMapper {
                            @Param("fromDx") Date fromDx);
 
     Stock puts(@Param("tickerId") int tickerId,
-                           @Param("fromDx") Date fromDx);
+               @Param("fromDx") Date fromDx);
 
 }
-*/

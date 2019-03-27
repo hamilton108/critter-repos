@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 
-@Mapper
 public interface StockMapper {
     void insertStockPrice(StockPrice bean);
 
