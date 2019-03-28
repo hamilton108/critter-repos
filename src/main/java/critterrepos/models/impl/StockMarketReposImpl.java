@@ -1,24 +1,23 @@
 package critterrepos.models.impl;
 
+import critterrepos.beans.StockPriceBean;
+import critterrepos.beans.options.DerivativeBean;
+import critterrepos.beans.options.OptionPurchaseBean;
+import critterrepos.beans.options.OptionPurchaseWithDerivativeBean;
+import critterrepos.mybatis.CritterMapper;
+import critterrepos.mybatis.DerivativeMapper;
+import critterrepos.mybatis.StockMapper;
 import oahu.exceptions.FinancialException;
 import oahu.financial.*;
 import oahu.financial.repository.StockMarketRepository;
 import org.apache.ibatis.session.SqlSession;
-import critterrepos.beans.options.DerivativeBean;
-import critterrepos.beans.options.OptionPurchaseBean;
-import critterrepos.beans.options.OptionPurchaseWithDerivativeBean;
-import critterrepos.beans.StockPriceBean;
-import critterrepos.mybatis.CritterMapper;
-import critterrepos.mybatis.DerivativeMapper;
-import critterrepos.mybatis.StockMapper;
-import critterrepos.utils.MyBatisUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Component
 public class StockMarketReposImpl implements StockMarketRepository {
@@ -26,18 +25,22 @@ public class StockMarketReposImpl implements StockMarketRepository {
     private HashMap<String,Stock> tickerLookup;
     private List<Stock> stocks;
 
-    public void setMybatisConfigFile(String mybatisConfigFile) {
-       MyBatisUtils.setConfigFile(mybatisConfigFile);
+    //public void setMybatisConfigFile(String mybatisConfigFile) {
+    //  MyBatisUtils.setConfigFile(mybatisConfigFile);
+    //}
+
+    private final SqlSession session;
+
+    @Autowired
+    public StockMarketReposImpl(SqlSession session) {
+        this.session = session;
     }
 
     @Override
     public void insertDerivative(Derivative derivative, Consumer<Exception> errorHandler) {
         DerivativeBean bean = (DerivativeBean)derivative;
-
-        MyBatisUtils.withSessionConsumer((session) -> {
-            DerivativeMapper dmapper = session.getMapper(DerivativeMapper.class);
-            dmapper.insertDerivative(bean);
-        }, errorHandler);
+        DerivativeMapper dmapper = session.getMapper(DerivativeMapper.class);
+        dmapper.insertDerivative(bean);
     }
 
     @Override
@@ -46,23 +49,19 @@ public class StockMarketReposImpl implements StockMarketRepository {
             populate();
         }
 
-        Function<SqlSession,Derivative> c = (session) -> {
-            DerivativeMapper mapper = session.getMapper(DerivativeMapper.class);
-            Derivative result = mapper.findDerivative(derivativeTicker);
+        DerivativeMapper mapper = session.getMapper(DerivativeMapper.class);
+        Derivative result = mapper.findDerivative(derivativeTicker);
 
-            if (result == null) {
-                return null;
-            }
-            ((DerivativeBean) result).setStock(idLookup.get(((DerivativeBean) result).getStockId()));
-            return result;
-        };
+        if (result == null) {
+            return null;
+        }
+        ((DerivativeBean) result).setStock(idLookup.get(((DerivativeBean) result).getStockId()));
 
-        Derivative retResult = MyBatisUtils.withSession(c);
-        if (retResult == null) {
+        if (result == null) {
             return Optional.empty();
         }
         else {
-            return Optional.of(retResult);
+            return Optional.of(result);
         }
     }
 
@@ -87,45 +86,41 @@ public class StockMarketReposImpl implements StockMarketRepository {
         if (tickerLookup == null) {
             populate();
         }
-        return MyBatisUtils.withSession((session) -> {
-            Stock stock = tickerLookup.get(ticker);
-            if (stock == null) {
-                return null;
-            }
-            StockMapper mapper = session.getMapper(StockMapper.class);
-            List<StockPrice> result = mapper.selectStockPrices(stock.getOid(), java.sql.Date.valueOf(fromDx));
-            for (StockPrice p : result) {
-                ((StockPriceBean) p).setStock(stock);
-            }
-            return result;
-        });
+        Stock stock = tickerLookup.get(ticker);
+        if (stock == null) {
+            return null;
+        }
+        StockMapper mapper = session.getMapper(StockMapper.class);
+        List<StockPrice> result = mapper.selectStockPrices(stock.getOid(), java.sql.Date.valueOf(fromDx));
+        for (StockPrice p : result) {
+            ((StockPriceBean) p).setStock(stock);
+        }
+        return result;
     }
 
     @Override
     public void registerOptionPurchase(DerivativePrice purchase, int purchaseType, int volume) {
-        MyBatisUtils.withSessionConsumer((session) -> {
-            DerivativeMapper dmapper = session.getMapper(DerivativeMapper.class);
-            DerivativeBean dbBean = dmapper.findDerivative(purchase.getDerivative().getTicker());
-            if (dbBean == null) {
-                dbBean = new DerivativeBean();
-                dbBean.setTicker(purchase.getDerivative().getTicker());
-                dbBean.setExpiry(purchase.getDerivative().getExpiry());
-                dbBean.setOpTypeStr(purchase.getDerivative().getOpTypeStr());
-                dbBean.setStock(purchase.getDerivative().getStock());
-                dmapper.insertDerivative(dbBean);
-            }
-            CritterMapper cmapper = session.getMapper(CritterMapper.class);
-            OptionPurchaseWithDerivativeBean newPurchase = new OptionPurchaseWithDerivativeBean();
-            purchase.setOid(dbBean.getOid());
-            //newPurchase.setDerivative(purchase.getDerivative());
-            //newPurchase.setDx(new java.sql.Date());
-            newPurchase.setLocalDx(LocalDate.now());
-            newPurchase.setVolume(volume);
-            newPurchase.setStatus(1);
-            newPurchase.setPurchaseType(purchaseType);
-            newPurchase.setSpotAtPurchase(purchase.getStockPrice().getCls());
-            cmapper.insertPurchase(newPurchase);
-        });
+        DerivativeMapper dmapper = session.getMapper(DerivativeMapper.class);
+        DerivativeBean dbBean = dmapper.findDerivative(purchase.getDerivative().getTicker());
+        if (dbBean == null) {
+            dbBean = new DerivativeBean();
+            dbBean.setTicker(purchase.getDerivative().getTicker());
+            dbBean.setExpiry(purchase.getDerivative().getExpiry());
+            dbBean.setOpTypeStr(purchase.getDerivative().getOpTypeStr());
+            dbBean.setStock(purchase.getDerivative().getStock());
+            dmapper.insertDerivative(dbBean);
+        }
+        CritterMapper cmapper = session.getMapper(CritterMapper.class);
+        OptionPurchaseWithDerivativeBean newPurchase = new OptionPurchaseWithDerivativeBean();
+        purchase.setOid(dbBean.getOid());
+        //newPurchase.setDerivative(purchase.getDerivative());
+        //newPurchase.setDx(new java.sql.Date());
+        newPurchase.setLocalDx(LocalDate.now());
+        newPurchase.setVolume(volume);
+        newPurchase.setStatus(1);
+        newPurchase.setPurchaseType(purchaseType);
+        newPurchase.setSpotAtPurchase(purchase.getStockPrice().getCls());
+        cmapper.insertPurchase(newPurchase);
     }
 
     @Override
@@ -145,10 +140,8 @@ public class StockMarketReposImpl implements StockMarketRepository {
         result.setSpotAtPurchase(spotAtPurchase);
         result.setBuyAtPurchase(buyAtPurchase);
 
-        MyBatisUtils.withSessionConsumer((session) -> {
-            CritterMapper dmapper = session.getMapper(CritterMapper.class);
-            dmapper.insertPurchase(result);
-        });
+        CritterMapper dmapper = session.getMapper(CritterMapper.class);
+        dmapper.insertPurchase(result);
 
         //(.setOptionId (.getOid d))
         //(.setDx (java.util.Date.))
@@ -165,42 +158,34 @@ public class StockMarketReposImpl implements StockMarketRepository {
 
     @Override
     public Collection<SpotOptionPrice> findOptionPrices(int opxId) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesOpxId(opxId);
-        });
+        return session.getMapper(DerivativeMapper.class).spotsOpricesOpxId(opxId);
     }
 
     @Override
     public Collection<SpotOptionPrice> findOptionPricesStockId(int stockId,
                                                                LocalDate fromDate,
                                                                LocalDate toDate) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesStockId(stockId,
-                    Date.valueOf(fromDate),
-                    Date.valueOf(toDate));
-        });
+        return session.getMapper(DerivativeMapper.class).spotsOpricesStockId(stockId,
+                Date.valueOf(fromDate),
+                Date.valueOf(toDate));
     }
 
     @Override
     public Collection<SpotOptionPrice> findOptionPricesStockIds(List<Integer> stockIds,
                                                                 LocalDate fromDate,
                                                                 LocalDate toDate) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesStockIds(stockIds,
-                    Date.valueOf(fromDate),
-                    Date.valueOf(toDate));
-        });
+        return session.getMapper(DerivativeMapper.class).spotsOpricesStockIds(stockIds,
+                Date.valueOf(fromDate),
+                Date.valueOf(toDate));
     }
 
     @Override
     public Collection<SpotOptionPrice> findOptionPricesStockTix(List<String> stockTix,
                                                                 LocalDate fromDate,
                                                                 LocalDate toDate) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesStockTix(stockTix,
-                    Date.valueOf(fromDate),
-                    Date.valueOf(toDate));
-        });
+        return session.getMapper(DerivativeMapper.class).spotsOpricesStockTix(stockTix,
+                Date.valueOf(fromDate),
+                Date.valueOf(toDate));
     }
 
     @Override
@@ -208,11 +193,10 @@ public class StockMarketReposImpl implements StockMarketRepository {
         int purchaseType,
         int status,
         Derivative.OptionType ot) {
-        return MyBatisUtils.withSession((session) ->
-                session.getMapper(CritterMapper.class).purchasesWithSalesAll(
+        return session.getMapper(CritterMapper.class).purchasesWithSalesAll(
                     purchaseType,
                     status,
-                    null));
+                    null);
     }
 
     @Override
@@ -225,15 +209,13 @@ public class StockMarketReposImpl implements StockMarketRepository {
         tickerLookup = new HashMap<>();
         stocks = new ArrayList<>();
 
-        MyBatisUtils.withSessionConsumer((session) -> {
-            StockMapper mapper = session.getMapper(StockMapper.class);
+        StockMapper mapper = session.getMapper(StockMapper.class);
 
-            List<Stock> tix = mapper.selectStocks();
-            for (Stock b : tix) {
-                idLookup.put(b.getOid(), b);
-                tickerLookup.put(b.getTicker(), b);
-                stocks.add(b);
-            }
-        });
+        List<Stock> tix = mapper.selectStocks();
+        for (Stock b : tix) {
+            idLookup.put(b.getOid(), b);
+            tickerLookup.put(b.getTicker(), b);
+            stocks.add(b);
+        }
     }
 }
