@@ -56,16 +56,11 @@ public class StockMarketReposImpl implements StockMarketRepository {
         Derivative result = mapper.findDerivative(derivativeTicker);
 
         if (result == null) {
-            return null;
+            return Optional.empty();
         }
         ((DerivativeBean) result).setStock(idLookup.get(((DerivativeBean) result).getStockId()));
 
-        if (result == null) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(result);
-        }
+        return Optional.of(result);
     }
 
     @Override
@@ -206,7 +201,11 @@ public class StockMarketReposImpl implements StockMarketRepository {
 
     @Override
     public String getTickerFor(int oid) {
-        return null;
+        if (idLookup == null) {
+            populate();
+        }
+        Stock stock = idLookup.get(oid);
+        return stock.getTicker();
     }
 
     private void populate() {
