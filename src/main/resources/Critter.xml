@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="critterrepos.models.mybatis.CritterMapper">
+<mapper namespace="critterrepos.mybatis.CritterMapper">
 
     <resultMap id="ruleTypeMap" type="critterrepos.beans.critters.RuleTypeBean">
         <id column="oid" property="oid" />
