@@ -41,8 +41,7 @@ public class OptionPurchaseBean implements OptionPurchase {
     //private Derivative myDerivative;
 
     // private EtradeRepository<Tuple<String>,Tuple2<String,File>> repository;
-    private EtradeRepository<Tuple<String>,
-            Tuple3<Optional<StockPrice>, Collection<DerivativePrice>,Collection<DerivativePrice>>> repository;
+    private EtradeRepository<Tuple<String>> repository;
     private List<CritterBean> critters;
     private List<OptionSaleBean> sales;
 
