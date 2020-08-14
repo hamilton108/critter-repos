@@ -1,0 +1,11 @@
+#!/bin/bash
+
+VER="1.2.0"
+ARTIFACT="critter-repos"
+
+mvn deploy:deploy-file -DgroupId=rcstadheim -DartifactId=${ARTIFACT} \
+    -Dversion=${VER} -Dpackaging=jar -Dfile=build/libs/${ARTIFACT}-${VER}.jar \
+    -Durl=file:/home/rcs/opt/java/mavenlocalrepo
+
+
+exit 0

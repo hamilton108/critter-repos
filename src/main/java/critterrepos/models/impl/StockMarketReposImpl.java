@@ -12,8 +12,6 @@ import oahu.financial.*;
 import oahu.financial.repository.StockMarketRepository;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -22,7 +20,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 @Component
-@CacheConfig(cacheNames = {"stockmarket"})
 public class StockMarketReposImpl implements StockMarketRepository {
     private HashMap<Integer,Stock> idLookup;
     private HashMap<String,Stock> tickerLookup;
@@ -79,7 +76,6 @@ public class StockMarketReposImpl implements StockMarketRepository {
         return stocks;
     }
 
-    @Cacheable
     @Override
     public Collection<StockPrice> findStockPrices(String ticker, LocalDate fromDx) {
         System.out.println("Fetching stockprices...");
