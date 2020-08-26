@@ -14,6 +14,10 @@ public class StockBean implements Stock {
     private List<Derivative> derivatives;
     private int tickerCategory;
 
+    public String toHtml() {
+        return ticker;
+    }
+
     @Override
     public String getTicker() {
         return ticker;

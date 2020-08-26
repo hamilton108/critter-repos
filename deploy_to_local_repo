@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VER="1.2.1"
+VER="1.3.0"
 ARTIFACT="critter-repos"
 
 mvn deploy:deploy-file -DgroupId=rcstadheim -DartifactId=${ARTIFACT} \
