@@ -1,45 +1,45 @@
 package critterrepos.beans.options;
 
-import oahu.financial.DerivativePrice;
+import oahu.financial.StockOptionPrice;
 
 import java.util.Optional;
 
 public class OptionPurchaseWithDerivativeBean extends OptionPurchaseBean {
-    private DerivativePrice derivativePrice;
+    private StockOptionPrice stockOptionPrice;
 
 
-    public Optional<DerivativePrice> getDerivativePrice() {
-        return Optional.of(derivativePrice);
+    public Optional<StockOptionPrice> getDerivativePrice() {
+        return Optional.of(stockOptionPrice);
     }
 
-    public void setDerivativePrice(DerivativePrice derivativePrice) {
-        this.derivativePrice = derivativePrice;
+    public void setDerivativePrice(StockOptionPrice stockOptionPrice) {
+        this.stockOptionPrice = stockOptionPrice;
     }
 
     @Override
     public String getOptionName() {
-        return derivativePrice.getDerivative().getTicker();
+        return stockOptionPrice.getDerivative().getTicker();
     }
 
     @Override
     public int getOptionId() {
-        return derivativePrice.getOid();
+        return stockOptionPrice.getOid();
     }
 
     @Override
     public double getPrice() {
-        return derivativePrice.getSell();
+        return stockOptionPrice.getSell();
     }
     @Override
     public double getBuyAtPurchase() {
-        return derivativePrice.getBuy();
+        return stockOptionPrice.getBuy();
     }
 
     @Override
     public String toString() {
         return String.format("[ %s ] Op.id: %d, cat: %d, date: %s, vol: %d",
-                derivativePrice.getDerivative().getTicker(),
-                derivativePrice.getOid(),
+                stockOptionPrice.getDerivative().getTicker(),
+                stockOptionPrice.getOid(),
                 getPurchaseType(),
                 getDx(),
                 getVolume());

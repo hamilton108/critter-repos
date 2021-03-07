@@ -1,8 +1,8 @@
 package critterrepos.beans.options;
 
 import oahu.exceptions.BinarySearchException;
-import oahu.financial.Derivative;
-import oahu.financial.DerivativePrice;
+import oahu.financial.StockOption;
+import oahu.financial.StockOptionPrice;
 import oahu.financial.OptionCalculator;
 import oahu.financial.StockPrice;
 
@@ -10,35 +10,35 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
-public class DerivativePriceBean implements DerivativePrice {
+public class StockOptionPriceBean implements StockOptionPrice {
     private static boolean DEBUG = false;
-    private Derivative derivative;
+    private StockOption stockOption;
     private StockPrice stockPrice;
     private double buy;
     private double sell;
     private int oid;
     private OptionCalculator calculator;
 
-    public DerivativePriceBean() {
+    public StockOptionPriceBean() {
     }
 
-    public DerivativePriceBean(StockPrice stockPrice,
-                               Derivative derivative,
-                               double buy,
-                               double sell,
-                               OptionCalculator calculator) {
+    public StockOptionPriceBean(StockPrice stockPrice,
+                                StockOption stockOption,
+                                double buy,
+                                double sell,
+                                OptionCalculator calculator) {
         this.stockPrice = stockPrice;
-        this.derivative = derivative;
+        this.stockOption = stockOption;
         this.buy = buy;
         this.sell = sell;
         this.calculator = calculator;
     }
 
-    public DerivativePriceBean(Derivative derivative,
-                               double buy,
-                               double sell,
-                               OptionCalculator calculator) {
-        this.derivative = derivative;
+    public StockOptionPriceBean(StockOption stockOption,
+                                double buy,
+                                double sell,
+                                OptionCalculator calculator) {
+        this.stockOption = stockOption;
         this.buy = buy;
         this.sell = sell;
         this.calculator = calculator;
@@ -88,13 +88,19 @@ public class DerivativePriceBean implements DerivativePrice {
 
     @Override
     public double optionPriceFor(double curStockPrice) {
-        double strike = derivative.getX();
+        double strike = stockOption.getX();
         double expiry = getDays()/365.0;
-        _currentRiscOptionValue = derivative.getOpType() == Derivative.OptionType.CALL ?
-                calculator.callPrice( curStockPrice,strike,expiry,_ivBuy.get()) :
-                calculator.putPrice( curStockPrice,strike,expiry,_ivBuy.get());
-        _currentRiscStockPrice =  curStockPrice;
-        return _currentRiscOptionValue;
+        Optional<Double> ivBuy = getIvBuy();
+        if (ivBuy.isPresent()) {
+            _currentRiscOptionValue = stockOption.getOpType() == StockOption.OptionType.CALL ?
+                    calculator.callPrice( curStockPrice,strike,expiry,ivBuy.get()) :
+                    calculator.putPrice( curStockPrice,strike,expiry,ivBuy.get());
+            _currentRiscStockPrice =  curStockPrice;
+            return _currentRiscOptionValue;
+        }
+        else {
+            return -1;
+        }
     }
 
     @Override
@@ -143,20 +149,20 @@ public class DerivativePriceBean implements DerivativePrice {
 
     @Override
     public String getTicker() {
-        return derivative == null ? null : derivative.getTicker();
+        return stockOption == null ? null : stockOption.getTicker();
     }
 
     @Override
-    public Derivative getDerivative() {
-        return derivative;
+    public StockOption getDerivative() {
+        return stockOption;
     }
 
-    public void setDerivative(Derivative derivative) {
-        this.derivative = derivative;
+    public void setDerivative(StockOption stockOption) {
+        this.stockOption = stockOption;
     }
 
     public int getDerivativeId() {
-        return derivative == null ? -1 : derivative.getOid();
+        return stockOption == null ? -1 : stockOption.getOid();
     }
 
     @Override
@@ -181,6 +187,7 @@ public class DerivativePriceBean implements DerivativePrice {
             LocalDate dx = getStockPrice().getLocalDx();
 
             //LocalDate x = getDerivative().getExpiry().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
             LocalDate x = getDerivative().getExpiry();
 
             return ChronoUnit.DAYS.between(dx, x);
@@ -192,7 +199,7 @@ public class DerivativePriceBean implements DerivativePrice {
     public Optional<Double> getIvBuy() {
         if (_ivBuy == null) {
             try {
-                _ivBuy = Optional.of(calculator.iv(this,Derivative.BUY));
+                _ivBuy = Optional.of(calculator.iv(this, StockOption.BUY));
             }
             catch (BinarySearchException ex) {
                 System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
@@ -207,7 +214,7 @@ public class DerivativePriceBean implements DerivativePrice {
     public Optional<Double> getIvSell() {
         if (_ivSell == null) {
             try {
-                _ivSell = Optional.of(calculator.iv(this,Derivative.SELL));
+                _ivSell = Optional.of(calculator.iv(this, StockOption.SELL));
             }
             catch (BinarySearchException ex) {
                 System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));

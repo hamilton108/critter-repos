@@ -1,8 +1,8 @@
 package critterrepos.mybatis;
 
 import critterrepos.beans.StockPriceBean;
-import critterrepos.beans.options.DerivativeBean;
-import critterrepos.beans.options.DerivativePriceBean;
+import critterrepos.beans.options.StockOptionBean;
+import critterrepos.beans.options.StockOptionPriceBean;
 import critterrepos.beans.options.SpotOptionPriceSummaryBean;
 import oahu.financial.SpotOptionPrice;
 import oahu.financial.Stock;
@@ -14,8 +14,8 @@ import java.util.List;
 
 public interface DerivativeMapper {
     void insertSpot(StockPriceBean s);
-    void insertDerivativePrice(DerivativePriceBean d);
-    void insertDerivative(DerivativeBean d);
+    void insertDerivativePrice(StockOptionPriceBean d);
+    void insertDerivative(StockOptionBean d);
 
     int countDerivative(String ticker);
 
@@ -27,7 +27,7 @@ public interface DerivativeMapper {
 
     Integer findDerivativeId(String ticker);
 
-    DerivativeBean findDerivative(String ticker);
+    StockOptionBean findDerivative(String ticker);
 
     List<SpotOptionPrice> spotsOprices();
     List<SpotOptionPrice> spotsOpricesOpxId(@Param("opxId") int opxId);

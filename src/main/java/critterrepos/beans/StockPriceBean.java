@@ -1,8 +1,9 @@
 package critterrepos.beans;
 
-import oahu.financial.DerivativePrice;
+import oahu.financial.StockOptionPrice;
 import oahu.financial.Stock;
 import oahu.financial.StockPrice;
+import oahu.financial.StockTicker;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -23,7 +24,7 @@ public class StockPriceBean implements StockPrice {
     private double marketValue;
     private long volume;
     private int oid = -1;
-    private List<DerivativePrice> optionPrices;
+    private List<StockOptionPrice> optionPrices;
 
 
     public StockPriceBean() {
@@ -85,10 +86,10 @@ public class StockPriceBean implements StockPrice {
     }
 
     @Override
-    public List<DerivativePrice> getOptionPrices() {
+    public List<StockOptionPrice> getOptionPrices() {
         return optionPrices;
     }
-    public void setOptionPrices(List<DerivativePrice> value) {
+    public void setOptionPrices(List<StockOptionPrice> value) {
         this.optionPrices = value;
     }
 
@@ -196,7 +197,7 @@ public class StockPriceBean implements StockPrice {
     }
 
     public String getTicker() {
-        return getStock() == null ? "N/A" : getStock().getTicker();
+        return getStock() == null ? "N/A": getStock().getTicker();
     }
 
     public int getTickerId() {

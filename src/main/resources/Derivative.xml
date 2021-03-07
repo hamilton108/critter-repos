@@ -11,7 +11,7 @@
         <result column="status" property="status"/>
         <collection column="oid"
                     property="derivatives"
-                    ofType="critterrepos.beans.options.DerivativeBean"
+                    ofType="critterrepos.beans.options.StockOptionBean"
                     javaType="java.util.ArrayList">
             <id column="derivative_id" property="oid" jdbcType="INTEGER" />
             <result column="opname" property="ticker"/>
@@ -57,7 +57,7 @@
     <!-- oid | opname | strike | exp_date | optype | stock_id | series -->
 
     <insert id="insertDerivative"
-            parameterType="critterrepos.beans.options.DerivativeBean"
+            parameterType="critterrepos.beans.options.StockOptionBean"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.optionx (opname, strike, exp_date, optype, stock_id, series)
@@ -163,7 +163,7 @@
     -->
 
     <insert id="insertDerivativePrice"
-            parameterType="critterrepos.beans.options.DerivativePriceBean"
+            parameterType="critterrepos.beans.options.StockOptionPriceBean"
             useGeneratedKeys="true"
             keyProperty="oid" >
             insert into stockmarket.optionprice (spot_id,opx_id,buy,sell) 
@@ -199,7 +199,7 @@
         select count(1) from stockmarket.optionx where opname=#{value}
     </select>
 
-    <resultMap id="derivativeMap" type="critterrepos.beans.options.DerivativeBean">
+    <resultMap id="derivativeMap" type="critterrepos.beans.options.StockOptionBean">
         <result column="oid" property="oid"/>
         <result column="opname" property="ticker"/>
         <result column="strike" property="x"/>

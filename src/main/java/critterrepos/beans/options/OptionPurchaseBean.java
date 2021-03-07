@@ -1,11 +1,10 @@
 package critterrepos.beans.options;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import oahu.dto.Tuple;
-import oahu.dto.Tuple3;
 import oahu.financial.*;
 import oahu.financial.critters.Critter;
 import oahu.financial.critters.SellRuleArgs;
-import oahu.financial.repository.ChachedEtradeRepository;
 import critterrepos.beans.critters.CritterBean;
 import oahu.financial.repository.EtradeRepository;
 import org.slf4j.Logger;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +48,7 @@ public class OptionPurchaseBean implements OptionPurchase {
     //endregion Init
 
     //region Properties
+    @JsonGetter("oid")
     public int getOid() {
         return oid;
     }
@@ -244,11 +243,11 @@ public class OptionPurchaseBean implements OptionPurchase {
     }
     private Double _watermark = null;
     public Double getWatermark() {
-        Optional<DerivativePrice> curDeriv = getDerivativePrice();
+        Optional<StockOptionPrice> curDeriv = getDerivativePrice();
 
         if (!curDeriv.isPresent()) return null;
 
-        DerivativePrice price = curDeriv.get();
+        StockOptionPrice price = curDeriv.get();
         if ((_watermark == null) || (price.getBuy() > _watermark)) {
             _watermark = price.getBuy();
         }
@@ -315,7 +314,7 @@ public class OptionPurchaseBean implements OptionPurchase {
     }
 
     private Optional<SellRuleArgs> collectArgs() {
-        Optional<DerivativePrice> dprice = getDerivativePrice();
+        Optional<StockOptionPrice> dprice = getDerivativePrice();
         if (dprice.isPresent() == false) {
             return Optional.empty();
         }
@@ -324,7 +323,7 @@ public class OptionPurchaseBean implements OptionPurchase {
             return Optional.empty();
         }
 
-        DerivativePrice p = dprice.get();
+        StockOptionPrice p = dprice.get();
 
         if ((_watermark == null) || (p.getBuy() > _watermark)) {
             log.info("Changing watermark from {} to {}",_watermark, p.getBuy());
@@ -378,7 +377,7 @@ public class OptionPurchaseBean implements OptionPurchase {
     }
 
     @Override
-    public Optional<DerivativePrice> getDerivativePrice() {
+    public Optional<StockOptionPrice> getDerivativePrice() {
         return repository.findDerivativePrice(new Tuple<>(ticker,optionName));
     }
     //endregion

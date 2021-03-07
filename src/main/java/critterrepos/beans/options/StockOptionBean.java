@@ -1,6 +1,6 @@
 package critterrepos.beans.options;
 
-import oahu.financial.Derivative;
+import oahu.financial.StockOption;
 import oahu.financial.Stock;
 
 import java.sql.Date;
@@ -10,22 +10,22 @@ import java.util.regex.Pattern;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public class DerivativeBean implements Derivative {
+public class StockOptionBean implements StockOption {
 
     private static Pattern p = Pattern.compile("\\D+(\\d\\D)\\d+");
 
     private Stock stock;
 
 
-    public DerivativeBean() {
+    public StockOptionBean() {
     }
 
 
-    public DerivativeBean(String ticker,
-                          OptionType opType,
-                          double x,
-                          LocalDate expiry,
-                          Stock stock) {
+    public StockOptionBean(String ticker,
+                           OptionType opType,
+                           double x,
+                           LocalDate expiry,
+                           Stock stock) {
         setTicker(ticker);
         setOpType(opType);
         setX(x);

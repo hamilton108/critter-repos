@@ -1,8 +1,9 @@
 package critterrepos.beans;
 
-import oahu.financial.Derivative;
+import oahu.financial.StockOption;
 import oahu.financial.Stock;
 import oahu.financial.StockPrice;
+import oahu.financial.StockTicker;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class StockBean implements Stock {
     private String ticker;
     private int status;
     private int oid;
-    private List<Derivative> derivatives;
+    private List<StockOption> stockOptions;
     private int tickerCategory;
 
     public String toHtml() {
@@ -74,12 +75,12 @@ public class StockBean implements Stock {
     }
 
     @Override
-    public List<Derivative> getDerivatives() {
-        return derivatives;
+    public List<StockOption> getDerivatives() {
+        return stockOptions;
     }
 
-    public void setDerivatives(List<Derivative> derivatives) {
-        this.derivatives = derivatives;
+    public void setDerivatives(List<StockOption> stockOptions) {
+        this.stockOptions = stockOptions;
     }
 
 }

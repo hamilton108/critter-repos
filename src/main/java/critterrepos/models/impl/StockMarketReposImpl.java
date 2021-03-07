@@ -1,7 +1,7 @@
 package critterrepos.models.impl;
 
 import critterrepos.beans.StockPriceBean;
-import critterrepos.beans.options.DerivativeBean;
+import critterrepos.beans.options.StockOptionBean;
 import critterrepos.beans.options.OptionPurchaseBean;
 import critterrepos.beans.options.OptionPurchaseWithDerivativeBean;
 import critterrepos.mybatis.CritterMapper;
@@ -40,23 +40,23 @@ public class StockMarketReposImpl implements StockMarketRepository {
      */
 
     @Override
-    public void insertDerivative(Derivative derivative, Consumer<Exception> errorHandler) {
+    public void insertDerivative(StockOption stockOption, Consumer<Exception> errorHandler) {
         MyBatisUtils.withSessionConsumer((session) -> {
-            DerivativeBean bean = (DerivativeBean) derivative;
+            StockOptionBean bean = (StockOptionBean) stockOption;
             DerivativeMapper dmapper = session.getMapper(DerivativeMapper.class);
             dmapper.insertDerivative(bean);
         });
     }
 
     @Override
-    public Optional<Derivative> findDerivative(String derivativeTicker) {
+    public Optional<StockOption> findDerivative(String derivativeTicker) {
         return MyBatisUtils.withSession((session) -> {
             if (idLookup == null) {
                 populate(session);
             }
 
             DerivativeMapper mapper = session.getMapper(DerivativeMapper.class);
-            DerivativeBean result = mapper.findDerivative(derivativeTicker);
+            StockOptionBean result = mapper.findDerivative(derivativeTicker);
 
             if (result == null) {
                 return Optional.empty();
@@ -104,12 +104,12 @@ public class StockMarketReposImpl implements StockMarketRepository {
     }
 
     @Override
-    public void registerOptionPurchase(DerivativePrice purchase, int purchaseType, int volume) {
+    public void registerOptionPurchase(StockOptionPrice purchase, int purchaseType, int volume) {
         MyBatisUtils.withSessionConsumer((session) -> {
             DerivativeMapper dmapper = session.getMapper(DerivativeMapper.class);
-            DerivativeBean dbBean = dmapper.findDerivative(purchase.getDerivative().getTicker());
+            StockOptionBean dbBean = dmapper.findDerivative(purchase.getDerivative().getTicker());
             if (dbBean == null) {
-                dbBean = new DerivativeBean();
+                dbBean = new StockOptionBean();
                 dbBean.setTicker(purchase.getDerivative().getTicker());
                 dbBean.setExpiry(purchase.getDerivative().getExpiry());
                 dbBean.setOpTypeStr(purchase.getDerivative().getOpTypeStr());
@@ -134,7 +134,7 @@ public class StockMarketReposImpl implements StockMarketRepository {
     public OptionPurchase registerOptionPurchase(int purchaseType, String opName, double price, int volume, double spotAtPurchase, double buyAtPurchase)
             throws FinancialException {
         return MyBatisUtils.withSession((session) -> {
-            Optional<Derivative> derivative = findDerivative(opName);
+            Optional<StockOption> derivative = findDerivative(opName);
             if (!derivative.isPresent()) {
                 throw new FinancialException(String.format("Could not find derivative: %s", opName));
             }
@@ -209,7 +209,7 @@ public class StockMarketReposImpl implements StockMarketRepository {
     public List<OptionPurchase> purchasesWithSalesAll(
         int purchaseType,
         int status,
-        Derivative.OptionType ot) {
+        StockOption.OptionType ot) {
         return MyBatisUtils.withSession((session) -> {
             return session.getMapper(CritterMapper.class).purchasesWithSalesAll(
                     purchaseType,
