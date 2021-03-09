@@ -1,5 +1,6 @@
 package critterrepos.beans.options;
 
+import critterrepos.utils.StockOptionUtils;
 import oahu.financial.StockOption;
 import oahu.financial.Stock;
 
@@ -12,8 +13,9 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class StockOptionBean implements StockOption {
 
-    private static Pattern p = Pattern.compile("\\D+(\\d\\D)\\d+");
-
+    private StockOptionUtils stockOptionUtils;
+    private final Pattern p = Pattern.compile("\\D+(\\d\\D)\\d+");
+    private LocalDate currentDate;
     private Stock stock;
 
 
@@ -24,13 +26,13 @@ public class StockOptionBean implements StockOption {
     public StockOptionBean(String ticker,
                            OptionType opType,
                            double x,
-                           LocalDate expiry,
-                           Stock stock) {
-        setTicker(ticker);
-        setOpType(opType);
-        setX(x);
-        setExpiry(expiry);
-        setStock(stock);
+                           Stock stock,
+                           StockOptionUtils stockOptionUtils) {
+        this.ticker = ticker;
+        this.opType = opType;
+        this.x = x;
+        this.stock = stock;
+        this.stockOptionUtils = stockOptionUtils;
     }
 
     /*
@@ -86,6 +88,10 @@ public class StockOptionBean implements StockOption {
     private LocalDate expiry;
     @Override
     public LocalDate getExpiry() {
+        if (expiry == null) {
+            String series = getSeries();
+            expiry = stockOptionUtils.seriesAsDate(series);
+        }
         return expiry;
     }
     public void setExpiry(LocalDate value) {
@@ -151,7 +157,8 @@ public class StockOptionBean implements StockOption {
                 series = m.group(1);
             }
             else {
-                series = "??";
+                //series = "??";
+                throw new RuntimeException("Series undefined for " + ticker);
             }
         }
         return series;
@@ -159,7 +166,7 @@ public class StockOptionBean implements StockOption {
 
     @Override
     public long getDays() {
-        return DAYS.between(LocalDate.now(),expiry);
+        return DAYS.between(getCurrentDate(),expiry);
     }
 
     public void setSeries(String value) {
@@ -193,4 +200,18 @@ public class StockOptionBean implements StockOption {
         ticker = value;
     }
 
+    public void setStockOptionUtils(StockOptionUtils stockOptionUtils) {
+        this.stockOptionUtils = stockOptionUtils;
+    }
+
+    public LocalDate getCurrentDate() {
+        if (currentDate == null) {
+            currentDate = LocalDate.now();
+        }
+        return currentDate;
+    }
+
+    public void setCurrentDate(LocalDate currentDate) {
+        this.currentDate = currentDate;
+    }
 }

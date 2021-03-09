@@ -180,6 +180,8 @@ public class StockOptionPriceBean implements StockOptionPrice {
 
     @Override
     public double getDays() {
+        return getDerivative().getDays();
+        /*
         if (DEBUG) {
             return 209;
         }
@@ -192,6 +194,7 @@ public class StockOptionPriceBean implements StockOptionPrice {
 
             return ChronoUnit.DAYS.between(dx, x);
         }
+         */
     }
 
     private Optional<Double> _ivBuy = null;
