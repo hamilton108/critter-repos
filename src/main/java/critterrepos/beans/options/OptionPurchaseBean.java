@@ -7,8 +7,6 @@ import oahu.financial.critters.Critter;
 import oahu.financial.critters.SellRuleArgs;
 import critterrepos.beans.critters.CritterBean;
 import oahu.financial.repository.EtradeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -19,7 +17,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OptionPurchaseBean implements OptionPurchase {
-    Logger log = LoggerFactory.getLogger("critterrepos.beans.options");
     //region Init
     private OptionCalculator calculator;
     private int oid;
@@ -326,7 +323,7 @@ public class OptionPurchaseBean implements OptionPurchase {
         StockOptionPrice p = dprice.get();
 
         if ((_watermark == null) || (p.getBuy() > _watermark)) {
-            log.info("Changing watermark from {} to {}",_watermark, p.getBuy());
+            //log.info("Changing watermark from {} to {}",_watermark, p.getBuy());
             _watermark = p.getBuy();
         }
         double dfb = getPrice() - p.getBuy();
