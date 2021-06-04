@@ -1,16 +1,29 @@
 package critterrepos.utils;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 
 public class DateUtils {
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+    public static String localTimeToStr(LocalTime t) {
+        return t.format(timeFormatter);
+    }
+
+    public static String localDateToStr(LocalDate ld) {
+        return ld.format(dateFormatter);
+    }
+    public static long unixTime(LocalDate ld, LocalTime tm) {
+        LocalDateTime ldt = LocalDateTime.of(ld.getYear(), ld.getMonth(), ld.getDayOfMonth(),
+                tm.getHour(), tm.getMinute(), 0);
+        return ldt.toInstant(ZoneOffset.UTC).toEpochMilli();
+    }
+    /*
     private static final DateFormat _formatter = new SimpleDateFormat("yyyy-MM-dd");
     private static final Date _toDay = new Date();
     private static final GregorianCalendar _cal0 = new GregorianCalendar();
@@ -44,4 +57,6 @@ public class DateUtils {
     public static String format(Date date) {
         return _formatter.format(date);
     }
+
+     */
 }

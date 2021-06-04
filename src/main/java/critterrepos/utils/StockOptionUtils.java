@@ -1,18 +1,24 @@
 package critterrepos.utils;
 
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.Map;
 
 public class StockOptionUtils {
     private Map<String, LocalDate> seriesMap;
+    private final LocalDate currentDate;
 
     public StockOptionUtils() {
-        populate();
+        this.currentDate = LocalDate.now();
+    }
+
+    public StockOptionUtils(LocalDate currentDate) {
+        this.currentDate = currentDate;
+        //populate();
     }
 
     public LocalDate seriesAsDate(String series) {
@@ -99,4 +105,7 @@ public class StockOptionUtils {
         seriesMap = new HashMap<>();
     }
 
+    public LocalDate getCurrentDate() {
+        return currentDate;
+    }
 }

@@ -6,8 +6,6 @@ import oahu.financial.StockOptionPrice;
 import oahu.financial.OptionCalculator;
 import oahu.financial.StockPrice;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class StockOptionPriceBean implements StockOptionPrice {
@@ -152,6 +150,10 @@ public class StockOptionPriceBean implements StockOptionPrice {
         return stockOption == null ? null : stockOption.getTicker();
     }
 
+    public double getX() {
+        return stockOption.getX();
+    }
+
     @Override
     public StockOption getDerivative() {
         return stockOption;
@@ -226,7 +228,6 @@ public class StockOptionPriceBean implements StockOptionPrice {
         }
         return _ivSell;
     }
-
 
     public void setBuy(double buy) {
         this.buy = buy;

@@ -166,7 +166,7 @@ public class StockOptionBean implements StockOption {
 
     @Override
     public long getDays() {
-        return DAYS.between(getCurrentDate(),expiry);
+        return DAYS.between(getCurrentDate(),getExpiry());
     }
 
     public void setSeries(String value) {
@@ -206,7 +206,8 @@ public class StockOptionBean implements StockOption {
 
     public LocalDate getCurrentDate() {
         if (currentDate == null) {
-            currentDate = LocalDate.now();
+            //currentDate = getExpiry().minusDays(60);
+            currentDate = stockOptionUtils.getCurrentDate();
         }
         return currentDate;
     }

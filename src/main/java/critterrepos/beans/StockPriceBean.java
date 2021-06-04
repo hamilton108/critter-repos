@@ -98,13 +98,18 @@ public class StockPriceBean implements StockPrice {
 
     @Override
     public LocalTime getTm() {
+        if (tm == null) {
+            tm = LocalTime.now();
+        }
         return tm;
     }
     public void setTm(LocalTime tm) {
         this.tm = tm;
     }
     public Time getSqlTime() {
-        return new Time(tm.getHour(), tm.getMinute(), tm.getSecond());
+        return new Time(getTm().getHour(),
+                getTm().getMinute(),
+                getTm().getSecond());
     }
 
     public Date getDx() {
