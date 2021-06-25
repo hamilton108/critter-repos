@@ -76,6 +76,11 @@ public class StockMarketReposImpl implements StockMarketRepository {
     }
 
     @Override
+    public Stock findStock(int oid) {
+        return findStock(getTickerFor(oid));
+    }
+
+    @Override
     public Collection<Stock> getStocks() {
         if (stocks == null) {
             MyBatisUtils.withSessionConsumer(this::populate);
@@ -101,6 +106,11 @@ public class StockMarketReposImpl implements StockMarketRepository {
             }
             return result;
         });
+    }
+
+    @Override
+    public Collection<StockPrice> findStockPrices(int oid, LocalDate fromDx) {
+        return findStockPrices(getTickerFor(oid), fromDx);
     }
 
     @Override
