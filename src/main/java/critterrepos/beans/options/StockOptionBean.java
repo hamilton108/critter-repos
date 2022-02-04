@@ -99,7 +99,7 @@ public class StockOptionBean implements StockOption {
     }
 
     public Date getExpirySql() {
-        return Date.valueOf(expiry);
+        return Date.valueOf(getExpiry());
     }
 
     public void setExpirySql(Date expirySql) {

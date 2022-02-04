@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Component
 public class StockMarketReposImpl implements StockMarketRepository {
@@ -25,22 +24,8 @@ public class StockMarketReposImpl implements StockMarketRepository {
     private HashMap<String,Stock> tickerLookup;
     private List<Stock> stocks;
 
-    //public void setMybatisConfigFile(String mybatisConfigFile) {
-    //  MyBatisUtils.setConfigFile(mybatisConfigFile);
-    //}
-
-    /*
-    private final SqlSession session;
-
-    @Autowired
-    public StockMarketReposImpl(SqlSession session) {
-        this.session = session;
-    }
-
-     */
-
     @Override
-    public void insertDerivative(StockOption stockOption, Consumer<Exception> errorHandler) {
+    public void insertDerivative(StockOption stockOption) {
         MyBatisUtils.withSessionConsumer((session) -> {
             StockOptionBean bean = (StockOptionBean) stockOption;
             DerivativeMapper dmapper = session.getMapper(DerivativeMapper.class);
@@ -141,8 +126,12 @@ public class StockMarketReposImpl implements StockMarketRepository {
     }
 
     @Override
-    public OptionPurchase registerOptionPurchase(int purchaseType, String opName, double price, int volume, double spotAtPurchase, double buyAtPurchase)
-            throws FinancialException {
+    public OptionPurchase registerOptionPurchase(int purchaseType,
+                                                 String opName,
+                                                 double price,
+                                                 int volume,
+                                                 double spotAtPurchase,
+                                                 double buyAtPurchase) {
         return MyBatisUtils.withSession((session) -> {
             Optional<StockOption> derivative = findDerivative(opName);
             if (!derivative.isPresent()) {
@@ -160,15 +149,6 @@ public class StockMarketReposImpl implements StockMarketRepository {
 
             CritterMapper dmapper = session.getMapper(CritterMapper.class);
             dmapper.insertPurchase(result);
-
-            //(.setOptionId (.getOid d))
-            //(.setDx (java.util.Date.))
-            //(.setPrice price)
-            //(.setVolume volume)
-            //(.setStatus 1)
-            //(.setPurchaseType 3)
-            //(.setSpotAtPurchase spot-at-purchase)
-            //(.setBuyAtPurchase buy-at-purchase))
 
             return result;
         });
