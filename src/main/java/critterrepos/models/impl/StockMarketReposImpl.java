@@ -157,42 +157,41 @@ public class StockMarketReposImpl implements StockMarketRepository {
 
     @Override
     public Collection<SpotOptionPrice> findOptionPrices(int opxId) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesOpxId(opxId);
-        });
+        return MyBatisUtils.withSession((session) ->
+                session.getMapper(DerivativeMapper.class).spotsOpricesOpxId(opxId));
     }
 
     @Override
     public Collection<SpotOptionPrice> findOptionPricesStockId(int stockId,
                                                                LocalDate fromDate,
                                                                LocalDate toDate) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesStockId(stockId,
-                    Date.valueOf(fromDate),
-                    Date.valueOf(toDate));
-        });
+        return MyBatisUtils.withSession((session) ->
+                session.getMapper(DerivativeMapper.class).spotsOpricesStockId(
+                        stockId,
+                        Date.valueOf(fromDate),
+                        Date.valueOf(toDate)));
     }
 
     @Override
     public Collection<SpotOptionPrice> findOptionPricesStockIds(List<Integer> stockIds,
                                                                 LocalDate fromDate,
                                                                 LocalDate toDate) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesStockIds(stockIds,
+        return MyBatisUtils.withSession((session) ->
+                session.getMapper(DerivativeMapper.class).spotsOpricesStockIds(
+                    stockIds,
                     Date.valueOf(fromDate),
-                    Date.valueOf(toDate));
-        });
+                    Date.valueOf(toDate)));
     }
 
     @Override
     public Collection<SpotOptionPrice> findOptionPricesStockTix(List<String> stockTix,
                                                                 LocalDate fromDate,
                                                                 LocalDate toDate) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(DerivativeMapper.class).spotsOpricesStockTix(stockTix,
-                    Date.valueOf(fromDate),
-                    Date.valueOf(toDate));
-        });
+        return MyBatisUtils.withSession((session) ->
+                session.getMapper(DerivativeMapper.class).spotsOpricesStockTix(
+                        stockTix,
+                        Date.valueOf(fromDate),
+                        Date.valueOf(toDate)));
     }
 
     @Override
@@ -200,12 +199,11 @@ public class StockMarketReposImpl implements StockMarketRepository {
         int purchaseType,
         int status,
         StockOption.OptionType ot) {
-        return MyBatisUtils.withSession((session) -> {
-            return session.getMapper(CritterMapper.class).purchasesWithSalesAll(
+        return MyBatisUtils.withSession((session) ->
+                session.getMapper(CritterMapper.class).purchasesWithSalesAll(
                     purchaseType,
                     status,
-                    null);
-        });
+                    null));
     }
 
     @Override
@@ -215,6 +213,14 @@ public class StockMarketReposImpl implements StockMarketRepository {
         }
         Stock stock = idLookup.get(oid);
         return stock.getTicker();
+    }
+
+    @Override
+    public List<OptionPurchase> activePurchasesWithCritters(int purchaseType) {
+        return MyBatisUtils.withSession((session) -> {
+            CritterMapper mapper = session.getMapper(CritterMapper.class);
+            return mapper.activePurchasesWithCritters(purchaseType);
+        });
     }
 
     private void populate(SqlSession session) {

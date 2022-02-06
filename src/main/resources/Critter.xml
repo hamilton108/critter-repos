@@ -57,7 +57,7 @@
         </collection>
     </resultMap>
 
-    <select id="activePurchasesAll" resultMap="purchaseResultMap">
+    <select id="activePurchasesWithCritters" resultMap="purchaseResultMap">
         select o.*,s.ticker,d.opname,d.optype,
         cr.oid as c_oid,cr.status as c_status,cr.sell_vol as c_sell_vol,cr.purchase_id as c_purchase_id,
         acc.oid as a_oid,acc.value as a_value,acc.rtyp as a_rtyp,acc.value as a_value,ar.description as a_rtyp_desc,acc.active as a_active,
