@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
 
 
 public class DateUtils {
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public static String localTimeToStr(LocalTime t) {
         return t.format(timeFormatter);

@@ -1,6 +1,7 @@
 package critterrepos.models.impl;
 
 import critterrepos.beans.StockPriceBean;
+import critterrepos.beans.options.OptionSaleBean;
 import critterrepos.beans.options.StockOptionBean;
 import critterrepos.beans.options.OptionPurchaseBean;
 import critterrepos.beans.options.OptionPurchaseWithDerivativeBean;
@@ -154,6 +155,15 @@ public class StockMarketReposImpl implements StockMarketRepository {
         });
     }
 
+    @Override
+    public int registerOptionSale(int purchaseOid, double price, int volume) {
+        var sale = new OptionSaleBean(purchaseOid, price, volume);
+        return MyBatisUtils.withSession((session) -> {
+            var mapper = session.getMapper(CritterMapper.class);
+            mapper.insertCritterSale(sale);
+            return sale.getOid();
+        });
+    }
 
     @Override
     public Collection<SpotOptionPrice> findOptionPrices(int opxId) {
