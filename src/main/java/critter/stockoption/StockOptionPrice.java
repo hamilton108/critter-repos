@@ -1,0 +1,222 @@
+package critter.stockoption;
+
+import critter.stock.StockPrice;
+import oahu.exceptions.BinarySearchException;
+
+import java.util.Optional;
+
+public class StockOptionPrice {
+    private static boolean DEBUG = false;
+    private StockOption stockOption;
+    private StockPrice stockPrice;
+    private double buy;
+    private double sell;
+    private int oid;
+    private OptionCalculator calculator;
+
+    public StockOptionPrice() {
+    }
+
+    public StockOptionPrice(StockPrice stockPrice,
+                            StockOption stockOption,
+                            double buy,
+                            double sell,
+                            OptionCalculator calculator) {
+        this.stockPrice = stockPrice;
+        this.stockOption = stockOption;
+        this.buy = buy;
+        this.sell = sell;
+        this.calculator = calculator;
+    }
+
+    public StockOptionPrice(StockOption stockOption,
+                            double buy,
+                            double sell,
+                            OptionCalculator calculator) {
+        this.stockOption = stockOption;
+        this.buy = buy;
+        this.sell = sell;
+        this.calculator = calculator;
+    }
+    public double getBuy() {
+        return buy;
+    }
+
+    public double getSell() {
+        return sell;
+    }
+
+
+    private Optional<Double> _breakEven = null;
+    public Optional<Double> getBreakEven() {
+        try {
+            if (_breakEven == null) {
+                _breakEven = Optional.of(calculator.stockPriceFor(getSell(), this));
+            }
+        }
+        catch (BinarySearchException ex) {
+            System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
+            _breakEven = Optional.empty();
+        }
+        return _breakEven;
+    }
+
+    private double _currentRiscOptionValue;
+    private Double _currentRiscStockPrice = null;
+    public Optional<Double> stockPriceFor(double optionValue) {
+        try {
+            //Double result = calculator.stockPriceFor(getSell() - optionValue,this);
+            Double result = calculator.stockPriceFor(optionValue,this);
+            _currentRiscOptionValue = optionValue;
+            _currentRiscStockPrice = result;
+            return Optional.of(_currentRiscStockPrice);
+        }
+        catch (BinarySearchException ex) {
+            System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
+            return Optional.empty();
+        }
+    }
+
+    public double optionPriceFor(double curStockPrice) {
+        double strike = stockOption.getX();
+        double expiry = getDays()/365.0;
+        Optional<Double> ivBuy = getIvBuy();
+        if (ivBuy.isPresent()) {
+            _currentRiscOptionValue = stockOption.getOpType() == StockOption.OptionType.CALL ?
+                    calculator.callPrice( curStockPrice,strike,expiry,ivBuy.get()) :
+                    calculator.putPrice( curStockPrice,strike,expiry,ivBuy.get());
+            _currentRiscStockPrice =  curStockPrice;
+            return _currentRiscOptionValue;
+        }
+        else {
+            return -1;
+        }
+    }
+
+    public double getCurrentRiscOptionValue() {
+        return _currentRiscOptionValue;
+    }
+
+    public double getCurrentRisc() {
+        /*
+        System.out.println("getCurrentRisc sell: " + sell);
+        System.out.println("getCurrentRisc _currentRiscOptionValue: " + _currentRiscOptionValue);
+        */
+        return sell - _currentRiscOptionValue;
+    }
+
+    public Optional<Double> getCurrentRiscStockPrice(){
+        if (_currentRiscStockPrice == null) {
+            return Optional.empty();
+        }
+        else {
+            return Optional.of(_currentRiscStockPrice);
+        }
+    }
+
+    public void resetRiscCalc() {
+        _currentRiscStockPrice = null;
+    }
+
+    public int getOid() {
+        return oid;
+    }
+
+    public int getStockId() {
+        return stockPrice == null ? -1 : stockPrice.getStockId();
+    }
+
+    public void setOid(int oid) {
+        this.oid = oid;
+    }
+
+    public String getTicker() {
+        return stockOption == null ? null : stockOption.getTicker();
+    }
+
+    public double getX() {
+        return stockOption.getX();
+    }
+
+    public StockOption getDerivative() {
+        return stockOption;
+    }
+
+    public void setDerivative(StockOption stockOption) {
+        this.stockOption = stockOption;
+    }
+
+    public int getDerivativeId() {
+        return stockOption == null ? -1 : stockOption.getOid();
+    }
+
+    public StockPrice getStockPrice() {
+        return stockPrice;
+    }
+
+    public void setStockPrice(StockPrice stockPrice) {
+        this.stockPrice = stockPrice;
+    }
+
+    public int getStockPriceId() {
+        return stockPrice == null ? -1 : stockPrice.getOid();
+    }
+
+    public double getDays() {
+        return getDerivative().getDays();
+        /*
+        if (DEBUG) {
+            return 209;
+        }
+        else {
+            LocalDate dx = getStockPrice().getLocalDx();
+
+            //LocalDate x = getDerivative().getExpiry().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            LocalDate x = getDerivative().getExpiry();
+
+            return ChronoUnit.DAYS.between(dx, x);
+        }
+         */
+    }
+
+    private Optional<Double> _ivBuy = null;
+    public Optional<Double> getIvBuy() {
+        if (_ivBuy == null) {
+            try {
+                _ivBuy = Optional.of(calculator.iv(this, StockOption.BUY));
+            }
+            catch (BinarySearchException ex) {
+                System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
+                _ivBuy = Optional.empty();
+            }
+        }
+        return _ivBuy;
+    }
+
+    private Optional<Double> _ivSell = null;
+    public Optional<Double> getIvSell() {
+        if (_ivSell == null) {
+            try {
+                _ivSell = Optional.of(calculator.iv(this, StockOption.SELL));
+            }
+            catch (BinarySearchException ex) {
+                System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
+                _ivSell = Optional.empty();
+            }
+        }
+        return _ivSell;
+    }
+
+    public void setBuy(double buy) {
+        this.buy = buy;
+    }
+
+    public void setSell(double sell) {
+        this.sell = sell;
+    }
+
+    public void setCalculator(OptionCalculator calculator) {
+        this.calculator = calculator;
+    }
+}
