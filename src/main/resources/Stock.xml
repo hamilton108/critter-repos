@@ -16,7 +16,7 @@
     -->
 
     <resultMap id="stockPriceMap"
-               type="critterrepos.beans.StockPriceBean">
+               type="critter.stock.StockPrice">
         <!--
         <result column="ticker_id" property="tickerId"/>
         <id column="oid" property="oid" jdbcType="INTEGER" />
@@ -41,7 +41,7 @@
 
 
     <insert id="insertStockPrice"
-            parameterType="critterrepos.beans.StockPriceBean"
+            parameterType="critter.stock.StockPrice"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.stockprice (ticker_id, dx, opn, hi, lo, cls, vol)
@@ -56,7 +56,7 @@
     -->
 
     <resultMap id="stocksMap"
-               type="critterrepos.beans.StockBean">
+               type="critter.stock.Stock">
         <id column="oid" property="oid" jdbcType="INTEGER" />
         <result column="ticker" property="ticker"/>
         <result column="company_name" property="companyName"/>

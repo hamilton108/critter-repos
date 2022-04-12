@@ -1,20 +1,21 @@
 package critterrepos.utils;
 
+import critter.util.StockOptionUtil;
 import oahu.dto.Tuple2;
-import oahu.financial.StockOption;
 import org.junit.Before;
 import org.junit.Test;
+import vega.financial.StockOption;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestStockOptionUtils {
-    private StockOptionUtils stockOptionUtils;
+    private StockOptionUtil stockOptionUtils;
 
     @Before
     public void init() {
-        stockOptionUtils = new StockOptionUtils();
+        stockOptionUtils = new StockOptionUtil();
     }
 
 

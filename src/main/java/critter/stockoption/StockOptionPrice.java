@@ -2,10 +2,11 @@ package critter.stockoption;
 
 import critter.stock.StockPrice;
 import oahu.exceptions.BinarySearchException;
+import vega.financial.calculator.OptionCalculator;
 
 import java.util.Optional;
 
-public class StockOptionPrice {
+public class StockOptionPrice implements vega.financial.StockOptionPrice {
     private static boolean DEBUG = false;
     private StockOption stockOption;
     private StockPrice stockPrice;
@@ -44,6 +45,11 @@ public class StockOptionPrice {
 
     public double getSell() {
         return sell;
+    }
+
+    @Override
+    public Optional<Double> ivBuy() {
+        return getIvBuy();
     }
 
 
@@ -138,16 +144,17 @@ public class StockOptionPrice {
         return stockOption.getX();
     }
 
-    public StockOption getDerivative() {
-        return stockOption;
-    }
-
-    public void setDerivative(StockOption stockOption) {
+    public void setStockOption(StockOption stockOption) {
         this.stockOption = stockOption;
     }
 
     public int getDerivativeId() {
         return stockOption == null ? -1 : stockOption.getOid();
+    }
+
+    @Override
+    public vega.financial.StockOption getStockOption() {
+        return stockOption;
     }
 
     public StockPrice getStockPrice() {
@@ -163,7 +170,7 @@ public class StockOptionPrice {
     }
 
     public double getDays() {
-        return getDerivative().getDays();
+        return getStockOption().getDays();
         /*
         if (DEBUG) {
             return 209;

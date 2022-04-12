@@ -1,9 +1,9 @@
 package critter.util;
 
 
-import critter.stockoption.StockOption.OptionType;
 import oahu.dto.Tuple2;
 import oahu.exceptions.FinancialException;
+import vega.financial.StockOption.OptionType;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -26,7 +26,7 @@ public class StockOptionUtil {
         //populate();
     }
 
-    public Tuple2<Integer, StockOption.OptionType> stockOptionInfoFromTicker(String priceTicker) {
+    public Tuple2<Integer, OptionType> stockOptionInfoFromTicker(String priceTicker) {
         Matcher m = pattern.matcher(priceTicker);
         if (m.find()) {
             String ticker = m.group(1);

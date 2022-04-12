@@ -1,10 +1,9 @@
 package critter.mybatis;
 
 
-import critterrepos.beans.critters.*;
-import critterrepos.beans.options.OptionPurchaseBean;
-import critterrepos.beans.options.OptionSaleBean;
-import oahu.financial.OptionPurchase;
+import critter.critterrule.*;
+import critter.stockoption.StockOptionPurchase;
+import critter.stockoption.StockOptionSale;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -14,39 +13,39 @@ public interface CritterMapper {
     void toggleAcceptRule(@Param("oid") int oid, @Param("isActive") String isActive);
     void toggleDenyRule(@Param("oid") int oid, @Param("isActive") String isActive);
 
-    List<OptionPurchase> activePurchasesWithCritters(@Param("purchaseType") int purchaseType);
+    List<StockOptionPurchase> activePurchasesWithCritters(@Param("purchaseType") int purchaseType);
 
-    List<OptionPurchaseBean> purchasesWithSales(@Param("stockId") int stockId,
-                                                @Param("purchaseType") int purchaseType,
-                                                @Param("status") int status,
-                                                @Param("optype") String optype);
+    List<StockOptionPurchase> purchasesWithSales(@Param("stockId") int stockId,
+                                                 @Param("purchaseType") int purchaseType,
+                                                 @Param("status") int status,
+                                                 @Param("optype") String optype);
 
-    List<OptionPurchase> purchasesWithSalesAll(
+    List<StockOptionPurchase> purchasesWithSalesAll(
                                                       @Param("purchaseType") int purchaseType,
                                                       @Param("status") int status,
                                                       @Param("optype") String optype);
 
-    OptionPurchaseBean findPurchase(@Param("purchaseId") int purchaseId);
+    StockOptionPurchase findPurchase(@Param("purchaseId") int purchaseId);
 
-    OptionPurchaseBean findPurchaseForCritId(@Param("critterId") int critterId);
+    StockOptionPurchase findPurchaseForCritId(@Param("critterId") int critterId);
 
-    OptionPurchaseBean findPurchaseForAccId(@Param("accId") int accId);
+    StockOptionPurchase findPurchaseForAccId(@Param("accId") int accId);
 
-    void insertPurchase(OptionPurchaseBean purchase);
+    void insertPurchase(StockOptionPurchase purchase);
 
-    void insertCritter(CritterBean critter);
+    void insertCritter(Critter critter);
 
-    void insertGradientRule(GradientRuleBean rule);
+    void insertGradientRule(GradientRule rule);
 
-    void insertAcceptRule(AcceptRuleBean rule);
+    void insertAcceptRule(AcceptRule rule);
 
-    void insertDenyRule(DenyRuleBean rule);
+    void insertDenyRule(DenyRule rule);
 
-    List<RuleTypeBean> ruleTypes();
+    List<RuleType> ruleTypes();
 
-    void registerCritterClosedWithSale(CritterBean critter);
+    void registerCritterClosedWithSale(Critter critter);
 
-    void registerPurchaseFullySold(OptionPurchase purchase);
+    void registerPurchaseFullySold(StockOptionPurchase purchase);
 
-    void insertCritterSale(OptionSaleBean sale);
+    void insertCritterSale(StockOptionSale sale);
 }

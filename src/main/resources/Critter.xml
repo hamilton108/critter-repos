@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="critter.mybatis.CritterMapper">
 
-    <resultMap id="ruleTypeMap" type="critterrepos.beans.critters.RuleTypeBean">
+    <resultMap id="ruleTypeMap" type="critter.critterrule.RuleType">
         <id column="oid" property="oid" />
         <result column="description" property="desc" />
     </resultMap>
@@ -13,7 +13,7 @@
     </select>
 
 
-    <resultMap id="purchaseResultMap" type="critterrepos.beans.options.OptionPurchaseBean">
+    <resultMap id="purchaseResultMap" type="critter.stockoption.StockOptionPurchase">
         <id column="oid" property="oid"/>
         <result column="dx" property="dx"/>
         <result column="price" property="price"/>
@@ -27,7 +27,7 @@
         <result column="optype" property="optionType"/>
         <collection property="critters"
                     column="oid"
-                    ofType="critterrepos.beans.critters.CritterBean"
+                    ofType="critter.critterrule.Critter"
                     javaType="java.util.ArrayList">
             <id column="c_oid" property="oid"/>
             <result column="c_sell_vol" property="sellVolume" />
@@ -35,7 +35,7 @@
             <result column="c_status" property="status" />
             <collection column="c_oid"
                         property="acceptRules"
-                        ofType="critterrepos.beans.critters.AcceptRuleBean"
+                        ofType="critter.critterrule.AcceptRule"
                         javaType="java.util.ArrayList">
                 <id column="a_oid" property="oid"/>
                 <result column="a_value" property="accValue" />
@@ -44,7 +44,7 @@
                 <result column="a_rtyp_desc" property="rtypDesc" />
                 <collection column="a_oid"
                             property="denyRules"
-                            ofType="critterrepos.beans.critters.DenyRuleBean"
+                            ofType="critter.critterrule.DenyRule"
                             javaType="java.util.ArrayList">
                     <id column="d_oid" property="oid"/>
                     <result column="d_value" property="denyValue" />
@@ -74,7 +74,7 @@
         order by s.oid,o.dx
     </select>
 
-    <resultMap id="purchaseWithSalesMap" type="critterrepos.beans.options.OptionPurchaseBean">
+    <resultMap id="purchaseWithSalesMap" type="critter.stockoption.StockOptionPurchase">
         <id column="oid" property="oid"/>
         <result column="dx" property="dx"/>
         <result column="price" property="price"/>
@@ -98,7 +98,7 @@
         <collection property="sales" 
                     column="oid" 
                     javaType="ArrayList" 
-                    ofType="critterrepos.beans.options.OptionSaleBean">
+                    ofType="critter.stockoption.StockOptionSale">
 	    	<id property="oid" column="s_oid"/>
 	    	<result property="dx" column="s_dx"/>
 	    	<result property="price" column="s_price"/>
@@ -179,7 +179,7 @@
 
     <!--  oid | opid | dx | price | volume | status | transaction_cost | purchase_type | spotAtPurchase | buy -->
     <insert id="insertPurchase"
-            parameterType="critterrepos.beans.options.OptionPurchaseBean"
+            parameterType="critter.stockoption.StockOptionPurchase"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.optionpurchase (opid, dx, price, volume, status, purchase_type, spot, buy)
@@ -188,7 +188,7 @@
 
     <!-- oid | status | critter_type | sell_vol | purchase_id | sale_id -->
     <insert id="insertCritter"
-            parameterType="critterrepos.beans.critters.CritterBean"
+            parameterType="critter.critterrule.Critter"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.critter (status,critter_type,sell_vol,purchase_id)
@@ -197,7 +197,7 @@
 
     <!-- oid | rtyp | value_1 | value_2 | level_1 | level_2 | active | name | cid -->
     <insert id="insertGradientRule"
-            parameterType="critterrepos.beans.critters.GradientRuleBean"
+            parameterType="critter.critterrule.GradientRule"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.gradient_rules (rtyp,value_1,value_2,level_1,level_2,cid)
@@ -206,7 +206,7 @@
 
     <!-- oid | value | rtyp | active | locationName | cid -->
     <insert id="insertAcceptRule"
-            parameterType="critterrepos.beans.critters.AcceptRuleBean"
+            parameterType="critter.critterrule.AcceptRule"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.accept_rules (value,rtyp,active,cid)
@@ -216,7 +216,7 @@
 
     <!-- oid | value | rtyp | group_id | active | has_memory -->
     <insert id="insertDenyRule"
-            parameterType="critterrepos.beans.critters.DenyRuleBean"
+            parameterType="critter.critterrule.DenyRule"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.deny_rules (value,rtyp,group_id,active,has_memory)
@@ -224,7 +224,7 @@
     </insert>
 
     <update id="registerCritterClosedWithSale"
-            parameterType="critterrepos.beans.critters.CritterBean"
+            parameterType="critter.critterrule.Critter"
             flushCache="true"
             statementType="PREPARED">
         update stockmarket.critter set status=9, sale_id=#{saleId} where oid=#{oid}

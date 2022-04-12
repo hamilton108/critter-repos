@@ -1,9 +1,9 @@
-package critterrepos.beans.options;
+package critter.stockoption;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class OptionSaleBean {
+public class StockOptionSale {
     // oid | purchase_id | dx | price | volume | status | transaction_cost
 
     private int oid;
@@ -12,11 +12,11 @@ public class OptionSaleBean {
     private double price;
     private int volume;
 
-    public OptionSaleBean() {
+    public StockOptionSale() {
     }
-    public OptionSaleBean(int purchaseOid,
-                          double price,
-                          int volume) {
+    public StockOptionSale(int purchaseOid,
+                           double price,
+                           int volume) {
         this.purchaseOid = purchaseOid;
         this.dx = Date.valueOf(LocalDate.now());
         this.price = price;

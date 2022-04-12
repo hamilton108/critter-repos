@@ -12,7 +12,7 @@ apply from: '../gradlecommon/spring-boot-deps.gradle'
 
 group = 'hamilton108'
 
-version = '2.0.0-SNAPSHOT'
+version = '3.0.0-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 //sourceCompatibility = JavaVersion.VERSION_1_8
@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     compile project(':oahu')
+    compile project(':vega')
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"

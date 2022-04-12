@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 
-public class StockPrice {
+public class StockPrice implements vega.financial.StockPrice {
     private LocalDate localDx;
     private LocalTime tm;
     private double opn;

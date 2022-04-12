@@ -1,22 +1,18 @@
-package critterrepos.beans.options;
+package critter.stockoption;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import oahu.dto.Tuple;
-import oahu.financial.*;
-import oahu.financial.critters.Critter;
-import oahu.financial.critters.SellRuleArgs;
-import critterrepos.beans.critters.CritterBean;
-import oahu.financial.repository.EtradeRepository;
+import critter.critterrule.Critter;
+import critter.critterrule.SellRuleArgs;
+import critter.stock.StockPrice;
+import vega.financial.calculator.OptionCalculator;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import java.util.stream.Collectors;
 
-public class OptionPurchaseBean implements OptionPurchase {
+public class StockOptionPurchase {
     //region Init
     private OptionCalculator calculator;
     private int oid;
@@ -36,11 +32,10 @@ public class OptionPurchaseBean implements OptionPurchase {
     //private Derivative myDerivative;
 
     // private EtradeRepository<Tuple<String>,Tuple2<String,File>> repository;
-    private EtradeRepository<Tuple<String>> repository;
-    private List<CritterBean> critters;
-    private List<OptionSaleBean> sales;
+    private List<Critter> critters;
+    private List<StockOptionSale> sales;
 
-    public OptionPurchaseBean() {}
+    public StockOptionPurchase() {}
 
     //endregion Init
 
@@ -64,7 +59,7 @@ public class OptionPurchaseBean implements OptionPurchase {
     }
     public LocalDate getLocalDx() {
         if (localDx == null) {
-            localDx = java.time.LocalDate.now();
+            localDx = LocalDate.now();
         }
         return localDx;
     }
@@ -136,21 +131,21 @@ public class OptionPurchaseBean implements OptionPurchase {
         this.volume = volume;
     }
 
-    public List<CritterBean> getCritters() {
+    public List<Critter> getCritters() {
         if (critters == null) {
             critters = new ArrayList<>();
         }
         return critters;
     }
 
-    public void setCritters(List<CritterBean> critters) {
+    public void setCritters(List<Critter> critters) {
         this.critters = critters;
     }
 
-    public List<OptionSaleBean> getSales() {
+    public List<StockOptionSale> getSales() {
         return sales;
     }
-    public void setSales(List<OptionSaleBean> sales) {
+    public void setSales(List<StockOptionSale> sales) {
         this.sales = sales;
     }
     public String getTicker() {
@@ -216,14 +211,6 @@ public class OptionPurchaseBean implements OptionPurchase {
         this.optionType = optionType;
     }
 
-    public EtradeRepository getRepository() {
-        return repository;
-    }
-
-    public void setRepository(EtradeRepository repository) {
-        this.repository = repository;
-    }
-
     public void setCalculator(OptionCalculator calculator) {
         this.calculator = calculator;
     }
@@ -235,16 +222,15 @@ public class OptionPurchaseBean implements OptionPurchase {
         return repository.findDerivativePrice(new Tuple<>(ticker,optionName));
     }
     */
-    public Optional<StockPrice>  getSpot() {
-        return repository.stockPrice(ticker);
+    public StockPrice  getSpot() {
+        return null; //repository.stockPrice(ticker);
     }
     private Double _watermark = null;
     public Double getWatermark() {
-        Optional<StockOptionPrice> curDeriv = getDerivativePrice();
+        var price = getDerivativePrice();
 
-        if (!curDeriv.isPresent()) return null;
+        if (price == null) return null;
 
-        StockOptionPrice price = curDeriv.get();
         if ((_watermark == null) || (price.getBuy() > _watermark)) {
             _watermark = price.getBuy();
         }
@@ -295,9 +281,9 @@ public class OptionPurchaseBean implements OptionPurchase {
     public long volumeSold() {
         if ((sales == null) || (sales.size() == 0)) return 0;
 
-        return sales.stream().mapToLong(OptionSaleBean::getVolume).sum();
+        return sales.stream().mapToLong(StockOptionSale::getVolume).sum();
     }
-    public void addSale(OptionSaleBean sale) {
+    public void addSale(StockOptionSale sale) {
         if (sales == null) {
             sales = new ArrayList<>();
         }
@@ -310,17 +296,15 @@ public class OptionPurchaseBean implements OptionPurchase {
         return volumeSold() < volume ? false : true;
     }
 
-    private Optional<SellRuleArgs> collectArgs() {
-        Optional<StockOptionPrice> dprice = getDerivativePrice();
-        if (dprice.isPresent() == false) {
-            return Optional.empty();
+    private SellRuleArgs collectArgs() {
+        StockOptionPrice p = getDerivativePrice();
+        if (p == null) {
+            return null;
         }
-        Optional<StockPrice> spot = getSpot();
-        if (spot.isPresent() == false) {
-            return Optional.empty();
+        StockPrice spot = getSpot();
+        if (spot == null) {
+            return null;
         }
-
-        StockOptionPrice p = dprice.get();
 
         if ((_watermark == null) || (p.getBuy() > _watermark)) {
             //log.info("Changing watermark from {} to {}",_watermark, p.getBuy());
@@ -329,8 +313,8 @@ public class OptionPurchaseBean implements OptionPurchase {
         double dfb = getPrice() - p.getBuy();
         double dfw = _watermark - p.getBuy();
 
-        SellRuleArgs result = new SellRuleArgs(dfb,dfw,spot.get().getCls(),getPrice());
-        return Optional.of(result);
+        SellRuleArgs result = new SellRuleArgs(dfb,dfw,spot.getCls(),getPrice());
+        return result;
     }
 
     public void inspect() {
@@ -349,33 +333,30 @@ public class OptionPurchaseBean implements OptionPurchase {
     //endregion Utility Methods
 
     //region interface OptionPurchase
-    @Override
     public List<Critter> acceptedForSale() {
         List<Critter> result = new ArrayList<>();
         if (isFullySold()) {
             return result;
         }
-        List<CritterBean> crits = getCritters().stream().filter(c -> c.getStatus() == 7).collect(Collectors.toList());
-        Optional<SellRuleArgs> args = collectArgs();
-        if (args.isPresent() == false) {
+        List<Critter> crits = getCritters().stream().filter(c -> c.getStatus() == 7).collect(Collectors.toList());
+        SellRuleArgs args = collectArgs();
+        if (args == null) {
             return result;
         }
         crits.forEach(c -> {
-            if (c.apply(args.get())) {
+            if (c.apply(args)) {
                 result.add(c);
             }
         });
         return result;
     }
 
-    @Override
     public String getOptionName() {
         return optionName;
     }
 
-    @Override
-    public Optional<StockOptionPrice> getDerivativePrice() {
-        return repository.findDerivativePrice(new Tuple<>(ticker,optionName));
+    public StockOptionPrice getDerivativePrice() {
+        return null; //repository.findDerivativePrice(new Tuple<>(ticker,optionName));
     }
     //endregion
 }

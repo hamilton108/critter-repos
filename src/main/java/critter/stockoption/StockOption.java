@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public class StockOption {
+public class StockOption implements vega.financial.StockOption {
 
     private StockOptionUtil stockOptionUtil;
     private final Pattern p = Pattern.compile("\\D+(\\d\\D)\\d+");
@@ -20,7 +20,7 @@ public class StockOption {
     public static int BUY = 1;
     public static int SELL = 2;
 
-    public enum OptionType { CALL, PUT, UNDEF };
+    //public enum OptionType { CALL, PUT, UNDEF };
 
     public enum LifeCycle { FROM_HTML, SAVED_TO_DATABASE, FROM_DATABASE };
 

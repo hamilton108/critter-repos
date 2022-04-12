@@ -1,32 +1,30 @@
 package critter.mybatis;
 
 import critter.stock.Stock;
-import critterrepos.beans.StockPriceBean;
-import critterrepos.beans.options.SpotOptionPriceSummaryBean;
-import critterrepos.beans.options.StockOptionBean;
-import critterrepos.beans.options.StockOptionPriceBean;
+import critter.stock.StockPrice;
+import critter.stockoption.StockOption;
+import critter.stockoption.StockOptionPrice;
 import org.apache.ibatis.annotations.Param;
 
 import java.sql.Date;
-import java.util.List;
 
 
 public interface StockOptionMapper {
-    void insertSpot(StockPriceBean s);
-    void insertDerivativePrice(StockOptionPriceBean d);
-    void insertDerivative(StockOptionBean d);
+    void insertSpot(StockPrice s);
+    void insertDerivativePrice(StockOptionPrice d);
+    void insertDerivative(StockOption d);
 
     int countDerivative(String ticker);
 
-    int countIvForSpot(StockPriceBean s);
+    int countIvForSpot(StockPrice s);
 
-    int countOpxPricesForSpot(StockPriceBean s);
+    int countOpxPricesForSpot(StockPrice s);
 
-    Integer findSpotId(StockPriceBean s);
+    Integer findSpotId(StockPrice s);
 
     Integer findDerivativeId(String ticker);
 
-    StockOptionBean findDerivative(String ticker);
+    StockOption findDerivative(String ticker);
 
     /*
     List<SpotOptionPrice> spotsOprices();
@@ -41,8 +39,9 @@ public interface StockOptionMapper {
                                                @Param("fromDx") Date fromDx,
                                                @Param("toDx") Date toDx);
 
-     */
     List<SpotOptionPriceSummaryBean> spotOptionPriceSummary();
+     */
+
     void insertBlackScholes(@Param("oid") int oid,
                             @Param("ivBuy") double ivBuy,
                             @Param("ivSell") double ivSell);
