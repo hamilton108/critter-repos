@@ -230,14 +230,14 @@
         update stockmarket.critter set status=9, sale_id=#{saleId} where oid=#{oid}
     </update>
     <update id="registerPurchaseFullySold"
-            parameterType="oahu.financial.OptionPurchase"
+            parameterType="critter.stockoption.StockOptionPurchase"
             flushCache="true"
             statementType="PREPARED">
         update stockmarket.optionpurchase set status=2 where oid=#{oid}
     </update>
 
     <insert id="insertCritterSale"
-            parameterType="critterrepos.beans.options.OptionSaleBean"
+            parameterType="critter.stockoption.StockOptionSale"
             useGeneratedKeys="true"
             keyProperty="oid" >
         insert into stockmarket.optionsale (purchase_id,dx,price,volume)

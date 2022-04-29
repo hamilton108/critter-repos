@@ -10,21 +10,24 @@ import java.sql.Date;
 
 
 public interface StockOptionMapper {
-    void insertSpot(StockPrice s);
-    void insertDerivativePrice(StockOptionPrice d);
-    void insertDerivative(StockOption d);
 
-    int countDerivative(String ticker);
+    //void insertSpot(StockPrice s);
 
-    int countIvForSpot(StockPrice s);
+    void insertStockOptionPrice(StockOptionPrice d);
 
-    int countOpxPricesForSpot(StockPrice s);
+    void insertStockOption(StockOption d);
 
-    Integer findSpotId(StockPrice s);
+    int countStockOption(String ticker);
 
-    Integer findDerivativeId(String ticker);
+    //int countIvForSpot(StockPrice s);
 
-    StockOption findDerivative(String ticker);
+    //int countOpxPricesForSpot(StockPrice s);
+
+    //Integer findSpotId(StockPrice s);
+
+    //Integer findStockOptionId(String ticker);
+
+    StockOption findStockOption(String ticker);
 
     /*
     List<SpotOptionPrice> spotsOprices();
@@ -40,11 +43,11 @@ public interface StockOptionMapper {
                                                @Param("toDx") Date toDx);
 
     List<SpotOptionPriceSummaryBean> spotOptionPriceSummary();
-     */
 
     void insertBlackScholes(@Param("oid") int oid,
                             @Param("ivBuy") double ivBuy,
                             @Param("ivSell") double ivSell);
+     */
 
     Stock calls(@Param("tickerId") int tickerId,
                 @Param("fromDx") Date fromDx);

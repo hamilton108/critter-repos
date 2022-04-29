@@ -16,7 +16,7 @@
     </environments>
     <mappers>
         <mapper resource="Critter.xml"/>
-        <mapper resource="Derivative.xml"/>
+        <mapper resource="StockOption.xml"/>
         <mapper resource="Stock.xml"/>
     </mappers>
 </configuration>
