@@ -31,7 +31,7 @@ public class StockOptionUtil {
         if (m.find()) {
             String ticker = m.group(1);
             String optionType = m.group(2);
-            int oid = optionTickerToOid(ticker);
+            int oid = stockTickerToOid(ticker);
             OptionType opt = asOptionType(optionType);
             return new Tuple2<>(oid,opt);
         }
@@ -70,7 +70,7 @@ public class StockOptionUtil {
         throw new FinancialException(String.format("No option type for %s", optionTypeStr));
     }
 
-    private int optionTickerToOid(String ticker) {
+    public int stockTickerToOid(String ticker) {
         switch (ticker) {
             case "NHY": return 1;
             case "EQNR": return 2;
@@ -94,7 +94,7 @@ public class StockOptionUtil {
             case "GOGL": return 28;
             case "NAS": return 29;
         }
-        throw new FinancialException(String.format("No oid for option ticker %s", ticker));
+        throw new FinancialException(String.format("No oid for stock ticker %s", ticker));
     }
     /*
     oid | ticker |     company_name     | status | ticker_category
