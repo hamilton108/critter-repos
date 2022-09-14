@@ -22,7 +22,7 @@ public class StockOption implements vega.financial.StockOption {
 
     //public enum OptionType { CALL, PUT, UNDEF };
 
-    public enum LifeCycle { FROM_HTML, SAVED_TO_DATABASE, FROM_DATABASE };
+    public enum LifeCycle { FROM_HTML, SAVED_TO_DATABASE, FROM_DATABASE }
 
     public StockOption() {
     }
@@ -93,7 +93,7 @@ public class StockOption implements vega.financial.StockOption {
     public LocalDate getExpiry() {
         if (expiry == null) {
             String series = getSeries();
-            expiry = stockOptionUtil.seriesAsDate(series);
+            expiry = StockOptionUtil.seriesAsDate(series);
         }
         return expiry;
     }

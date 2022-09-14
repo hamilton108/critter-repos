@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class StockOptionUtil {
     //private Map<String, LocalDate> seriesMap;
     private final LocalDate currentDate;
-    private final Pattern pattern = Pattern.compile("(\\D+)\\d(\\D)\\d+", Pattern.CASE_INSENSITIVE);
+    private static final Pattern pattern = Pattern.compile("(\\D+)\\d(\\D)\\d+", Pattern.CASE_INSENSITIVE);
 
     public StockOptionUtil() {
         this.currentDate = LocalDate.now();
@@ -26,7 +26,7 @@ public class StockOptionUtil {
         //populate();
     }
 
-    public Tuple2<Integer, OptionType> stockOptionInfoFromTicker(String priceTicker) {
+    public static Tuple2<Integer, OptionType> stockOptionInfoFromTicker(String priceTicker) {
         Matcher m = pattern.matcher(priceTicker);
         if (m.find()) {
             String ticker = m.group(1);
@@ -38,7 +38,7 @@ public class StockOptionUtil {
         throw new FinancialException(String.format("No stock option info for %s", priceTicker));
     }
 
-    private OptionType asOptionType(String optionTypeStr) {
+    private static OptionType asOptionType(String optionTypeStr) {
         switch (optionTypeStr) {
             case "A":
             case "B":
@@ -70,7 +70,7 @@ public class StockOptionUtil {
         throw new FinancialException(String.format("No option type for %s", optionTypeStr));
     }
 
-    public int stockTickerToOid(String ticker) {
+    public static int stockTickerToOid(String ticker) {
         switch (ticker) {
             case "NHY": return 1;
             case "EQNR": return 2;
@@ -123,7 +123,7 @@ public class StockOptionUtil {
      */
 
 
-    public LocalDate seriesAsDate(String series) {
+    public static LocalDate seriesAsDate(String series) {
         String ys = series.substring(0,1);
         String ms = series.substring(1,2);
         int year = 0;
