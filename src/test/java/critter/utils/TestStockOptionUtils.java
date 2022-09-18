@@ -1,4 +1,4 @@
-package critterrepos.utils;
+package critter.utils;
 
 import critter.util.StockOptionUtil;
 import oahu.dto.Tuple2;

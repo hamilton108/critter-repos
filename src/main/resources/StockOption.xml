@@ -69,7 +69,7 @@
          strike |  exp_date | optype | price_id |  buy     |
          sell   | spot_id   | dx     | tm       |  spot -->
     <!--
-    <resultMap id="spotWithOptionPricesMap" type="critterrepos.beans.options.SpotOptionPriceBean">
+    <resultMap id="spotWithOptionPricesMap" type="critter.beans.options.SpotOptionPriceBean">
         <id column="price_id" property="priceId" jdbcType="INTEGER" />
         <result column="spot_id" property="spotId" jdbcType="INTEGER" />
         <result column="stock_id" property="stockId" jdbcType="INTEGER" />
@@ -126,7 +126,7 @@
         order by dx,tm
     </select>
     <insert id="insertBlackScholes"
-            parameterType="critterrepos.beans.options.SpotOptionPriceBean">
+            parameterType="critter.beans.options.SpotOptionPriceBean">
         insert into stockmarket.iv_blackscholes (oid,iv_buy,iv_sell)
         values (#{oid},#{ivBuy},#{ivSell})
     </insert>
@@ -147,11 +147,11 @@
 
 
     <!--
-    <resultMap id="spotWithOptionPricesMap" type="critterrepos.beans.StockPriceBean">
+    <resultMap id="spotWithOptionPricesMap" type="critter.beans.StockPriceBean">
         <id column="spot_id" property="oid" jdbcType="INTEGER" />
         <collection column="spot_id"
                     property="optionPrices"
-                    ofType="critterrepos.beans.options.DerivativePriceBean"
+                    ofType="critter.beans.options.DerivativePriceBean"
                     javaType="java.util.ArrayList">
             <id column="price_id" property="oid" jdbcType="INTEGER" />
         </collection>
@@ -219,19 +219,19 @@
     -->
 
     <!--
-    <select id="findSpotId" resultType="Integer" parameterType="critterrepos.beans.StockPriceBean">
+    <select id="findSpotId" resultType="Integer" parameterType="critter.beans.StockPriceBean">
         select oid from stockmarket.spot where stock_id=#{stockId} and dx=#{dx} and tm=#{sqlTime}
     </select>
 
-    <select id="countIvForSpot" resultType="int" parameterType="critterrepos.beans.StockPriceBean">
+    <select id="countIvForSpot" resultType="int" parameterType="critter.beans.StockPriceBean">
         select count(1) from stockmarket.iv where spot_id=#{oid}
     </select>
-    <select id="countOpxPricesForSpot" resultType="int" parameterType="critterrepos.beans.StockPriceBean">
+    <select id="countOpxPricesForSpot" resultType="int" parameterType="critter.beans.StockPriceBean">
         select count(1) from stockmarket.optionprice where spot_id=#{oid}
     </select>
 
 
-    <resultMap id="spotOptionPriceSummaryMap" type="critterrepos.beans.options.SpotOptionPriceSummaryBean">
+    <resultMap id="spotOptionPriceSummaryMap" type="critter.beans.options.SpotOptionPriceSummaryBean">
         <result column="stock_id" property="stockId" jdbcType="INTEGER" />
         <result column="ticker" property="ticker" />
         <result column="year" property="year" />

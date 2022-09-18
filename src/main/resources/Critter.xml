@@ -89,7 +89,7 @@
         <result column="exp_date" property="expirySql"/>
         <result column="strike" property="x"/>
         <!--
-	    <association property="myDerivative" column="oid" javaType="critterrepos.beans.options.DerivativeBean">
+	    <association property="myDerivative" column="oid" javaType="critter.beans.options.DerivativeBean">
 	    	<id property="oid" column="d_oid"/>
 			<result property="expirySql" column="exp_date"/>
 			<result property="x" column="strike"/>

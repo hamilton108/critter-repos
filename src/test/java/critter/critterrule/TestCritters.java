@@ -1,6 +1,5 @@
-package critterrepos.beans.critters;
+package critter.critterrule;
 
-import critter.critterrule.*;
 import org.junit.Test;
 import static  org.assertj.core.api.Assertions.assertThat;
 

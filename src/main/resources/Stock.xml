@@ -71,7 +71,7 @@
 
     <!--
     <resultMap id="stockWithPricesMap"
-               type="critterrepos.beans.StockBean">
+               type="critter.beans.StockBean">
         <id column="oid" property="oid" jdbcType="INTEGER" />
         <result column="ticker" property="ticker"/>
         <result column="company_name" property="companyName"/>
@@ -79,7 +79,7 @@
         <result column="ticker_category" property="tickerCategory"/>
         <collection column="oid"
                     property="prices"
-                    ofType="critterrepos.beans.StockPriceBean"
+                    ofType="critter.beans.StockPriceBean"
                     javaType="java.util.ArrayList">
             <id column="price_id" property="oid" jdbcType="INTEGER" />
             <result column="dx" property="dx"/>

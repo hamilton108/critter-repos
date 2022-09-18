@@ -67,6 +67,39 @@ public class StockOptionPrice implements vega.financial.StockOptionPrice {
         return _breakEven;
     }
 
+    public Optional<StockOptionRisc> riscStockPrice(double stockPrice) {
+        if (getIvBuy().isPresent()) {
+            var adjustedOptionPrice = optionPriceFor(stockPrice);
+            var result = new StockOptionRisc(stockOption.getTicker(),
+                    stockPrice,
+                    adjustedOptionPrice,
+                    getIvBuy().get()) ;
+            return Optional.of(result);
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+    public Optional<StockOptionRisc> riscOptionPrice(double optionPrice) {
+
+        if (getIvBuy().isPresent()) {
+            var adjusteStockPrice = stockPriceFor(optionPrice);
+            if (adjusteStockPrice.isPresent()) {
+                var result = new StockOptionRisc(stockOption.getTicker(),
+                        adjusteStockPrice.get(),
+                        optionPrice,
+                        getIvBuy().get());
+                return Optional.of(result);
+            } else {
+                return Optional.empty();
+            }
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+
     private double _currentRiscOptionValue;
     private Double _currentRiscStockPrice = null;
     public Optional<Double> stockPriceFor(double optionValue) {
