@@ -100,15 +100,13 @@ public class StockOptionPrice implements vega.financial.StockOptionPrice {
     }
 
 
-    private double _currentRiscOptionValue;
-    private Double _currentRiscStockPrice = null;
+    //private double _currentRiscOptionValue;
+    //private Double _currentRiscStockPrice = null;
     public Optional<Double> stockPriceFor(double optionValue) {
         try {
             //Double result = calculator.stockPriceFor(getSell() - optionValue,this);
             Double result = calculator.stockPriceFor(optionValue,this);
-            _currentRiscOptionValue = optionValue;
-            _currentRiscStockPrice = result;
-            return Optional.of(_currentRiscStockPrice);
+            return Optional.of(result);
         }
         catch (BinarySearchException ex) {
             System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
@@ -120,41 +118,9 @@ public class StockOptionPrice implements vega.financial.StockOptionPrice {
         double strike = stockOption.getX();
         double expiry = getDays()/365.0;
         Optional<Double> ivBuy = getIvBuy();
-        if (ivBuy.isPresent()) {
-            _currentRiscOptionValue = stockOption.getOpType() == StockOption.OptionType.CALL ?
-                    calculator.callPrice( curStockPrice,strike,expiry,ivBuy.get()) :
-                    calculator.putPrice( curStockPrice,strike,expiry,ivBuy.get());
-            _currentRiscStockPrice =  curStockPrice;
-            return _currentRiscOptionValue;
-        }
-        else {
-            return -1;
-        }
-    }
-
-    public double getCurrentRiscOptionValue() {
-        return _currentRiscOptionValue;
-    }
-
-    public double getCurrentRisc() {
-        /*
-        System.out.println("getCurrentRisc sell: " + sell);
-        System.out.println("getCurrentRisc _currentRiscOptionValue: " + _currentRiscOptionValue);
-        */
-        return sell - _currentRiscOptionValue;
-    }
-
-    public Optional<Double> getCurrentRiscStockPrice(){
-        if (_currentRiscStockPrice == null) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(_currentRiscStockPrice);
-        }
-    }
-
-    public void resetRiscCalc() {
-        _currentRiscStockPrice = null;
+        return ivBuy.map(aDouble -> stockOption.getOpType() == StockOption.OptionType.CALL ?
+                calculator.callPrice(curStockPrice, strike, expiry, aDouble) :
+                calculator.putPrice(curStockPrice, strike, expiry, aDouble)).orElse(-1.0);
     }
 
     public int getOid() {

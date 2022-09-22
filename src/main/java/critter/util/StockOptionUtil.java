@@ -2,6 +2,7 @@ package critter.util;
 
 
 import oahu.dto.Tuple2;
+import oahu.dto.Tuple3;
 import oahu.exceptions.FinancialException;
 import vega.financial.StockOption.OptionType;
 
@@ -26,14 +27,14 @@ public class StockOptionUtil {
         //populate();
     }
 
-    public static Tuple2<Integer, OptionType> stockOptionInfoFromTicker(String priceTicker) {
+    public static Tuple3<Integer, String, OptionType> stockOptionInfoFromTicker(String priceTicker) {
         Matcher m = pattern.matcher(priceTicker);
         if (m.find()) {
             String ticker = m.group(1);
             String optionType = m.group(2);
             int oid = stockTickerToOid(ticker);
             OptionType opt = asOptionType(optionType);
-            return new Tuple2<>(oid,opt);
+            return new Tuple3<>(oid,ticker,opt);
         }
         throw new FinancialException(String.format("No stock option info for %s", priceTicker));
     }

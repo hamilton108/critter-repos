@@ -2,6 +2,7 @@ package critter.utils;
 
 import critter.util.StockOptionUtil;
 import oahu.dto.Tuple2;
+import oahu.dto.Tuple3;
 import org.junit.Test;
 import vega.financial.StockOption;
 
@@ -37,14 +38,14 @@ public class TestStockOptionUtils {
     }
     @Test
     public void test_stockoption_info_from_ticker() {
-        var call1 = new Tuple2<>(2, StockOption.OptionType.CALL);
+        var call1 = new Tuple3<>(2, "EQNR", StockOption.OptionType.CALL);
         assertThat(StockOptionUtil.stockOptionInfoFromTicker("EQNR1L320")).isEqualTo(call1);
-        var put1 = new Tuple2<>(2, StockOption.OptionType.PUT);
+        var put1 = new Tuple3<>(2, "EQNR", StockOption.OptionType.PUT);
         assertThat(StockOptionUtil.stockOptionInfoFromTicker("EQNR1X320")).isEqualTo(put1);
 
-        var call2 = new Tuple2<>(3, StockOption.OptionType.CALL);
+        var call2 = new Tuple3<>(3, "YAR", StockOption.OptionType.CALL);
         assertThat(StockOptionUtil.stockOptionInfoFromTicker("YAR1G540")).isEqualTo(call2);
-        var put2 = new Tuple2<>(3, StockOption.OptionType.PUT);
+        var put2 = new Tuple3<>(3, "YAR", StockOption.OptionType.PUT);
         assertThat(StockOptionUtil.stockOptionInfoFromTicker("YAR1S540")).isEqualTo(put2);
     }
 }
