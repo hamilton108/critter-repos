@@ -44,6 +44,7 @@ public class TestStockOptionPrice {
         StockOptionRisc risc = maybeRisc.get();
         assertThat(risc.getOptionPrice()).isEqualTo(19.1, offset(0.2));
         assertThat(risc.getStockPrice()).isEqualTo(480.0, offset(0.01));
+        assertThat(risc.getRisc()).isEqualTo(7.15, offset(0.1));
 
         maybeRisc = price.riscOptionPrice(16.0);
 

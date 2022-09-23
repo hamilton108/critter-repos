@@ -1,5 +1,7 @@
 package critter.stockoption;
 
+import java.util.Optional;
+
 public class StockOptionRisc {
     private final double stockPrice;
     private final double optionPrice;
@@ -29,5 +31,17 @@ public class StockOptionRisc {
 
     public double getVolatility() {
         return price.getIvBuy().orElse(-1.0);
+    }
+    public Optional<Double> getBreakEven() {
+        return Optional.empty();
+    }
+    public double getBuy() {
+        return price.getBuy();
+    }
+    public double getSell() {
+        return price.getSell();
+    }
+    public double getRisc() {
+        return price.getSell() - optionPrice;
     }
 }
