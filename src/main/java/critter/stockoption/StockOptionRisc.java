@@ -4,17 +4,15 @@ public class StockOptionRisc {
     private final double stockPrice;
     private final double optionPrice;
 
-    private final double volatility;
-    private final String optionTicker;
+    private final StockOptionPrice price;
 
-    public StockOptionRisc(String optionTicker,
+    public StockOptionRisc(
                            double stockPrice,
                            double optionPrice,
-                           double volatility) {
-        this.optionTicker = optionTicker;
+                           StockOptionPrice price) {
         this.stockPrice = stockPrice;
         this.optionPrice = optionPrice;
-        this.volatility = volatility;
+        this.price = price;
     }
 
     public double getStockPrice() {
@@ -26,10 +24,10 @@ public class StockOptionRisc {
     }
 
     public String getOptionTicker() {
-        return optionTicker;
+        return price.getTicker();
     }
 
     public double getVolatility() {
-        return volatility;
+        return price.getIvBuy().orElse(-1.0);
     }
 }

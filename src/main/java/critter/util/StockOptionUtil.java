@@ -1,7 +1,6 @@
 package critter.util;
 
 
-import oahu.dto.Tuple2;
 import oahu.dto.Tuple3;
 import oahu.exceptions.FinancialException;
 import vega.financial.StockOption.OptionType;
