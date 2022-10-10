@@ -33,7 +33,7 @@ public class StockOptionRisc {
         return price.getIvBuy().orElse(-1.0);
     }
     public Optional<Double> getBreakEven() {
-        return Optional.empty();
+        return price.getBreakEven();
     }
     public double getBuy() {
         return price.getBuy();
