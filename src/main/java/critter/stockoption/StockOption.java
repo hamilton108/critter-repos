@@ -20,6 +20,7 @@ public class StockOption implements vega.financial.StockOption {
     public static int BUY = 1;
     public static int SELL = 2;
 
+
     //public enum OptionType { CALL, PUT, UNDEF };
 
     public enum LifeCycle { FROM_HTML, SAVED_TO_DATABASE, FROM_DATABASE }
@@ -201,6 +202,10 @@ public class StockOption implements vega.financial.StockOption {
 
     public void setStockOptionUtil(StockOptionUtil stockOptionUtil) {
         this.stockOptionUtil = stockOptionUtil;
+    }
+
+    public StockOptionUtil getStockOptionUtil() {
+        return stockOptionUtil;
     }
 
     public LocalDate getCurrentDate() {
