@@ -227,12 +227,10 @@ public class StockOptionPurchase {
     }
     private Double _watermark = null;
     public Double getWatermark() {
-        var price = getDerivativePrice();
+        //if (price == null) return null;
 
-        if (price == null) return null;
-
-        if ((_watermark == null) || (price.getBuy() > _watermark)) {
-            _watermark = price.getBuy();
+        if ((_watermark == null) || (stockOptionBuy > _watermark)) {
+            _watermark = stockOptionBuy;
         }
         //region Obsolete
         /*
@@ -297,21 +295,23 @@ public class StockOptionPurchase {
     }
 
     private SellRuleArgs collectArgs() {
-        StockOptionPrice p = getDerivativePrice();
+        //StockOptionPrice p = getDerivativePrice();
+        /*
         if (p == null) {
             return null;
         }
+         */
         StockPrice spot = getSpot();
         if (spot == null) {
             return null;
         }
 
-        if ((_watermark == null) || (p.getBuy() > _watermark)) {
+        if ((_watermark == null) || (stockOptionBuy > _watermark)) {
             //log.info("Changing watermark from {} to {}",_watermark, p.getBuy());
-            _watermark = p.getBuy();
+            _watermark = stockOptionBuy;
         }
-        double dfb = getPrice() - p.getBuy();
-        double dfw = _watermark - p.getBuy();
+        double dfb = getPrice() - stockOptionBuy; //p.getBuy();
+        double dfw = _watermark - stockOptionBuy; //p.getBuy();
 
         SellRuleArgs result = new SellRuleArgs(dfb,dfw,spot.getCls(),getPrice());
         return result;
@@ -355,8 +355,12 @@ public class StockOptionPurchase {
         return optionName;
     }
 
-    public StockOptionPrice getDerivativePrice() {
-        return null; //repository.findDerivativePrice(new Tuple<>(ticker,optionName));
+    private double stockOptionBuy = 0.0;
+    public double getStockOptionBuy() {
+        return stockOptionBuy; //repository.findDerivativePrice(new Tuple<>(ticker,optionName));
+    }
+    public void setStockOptionBuy(double value) {
+        stockOptionBuy = value;
     }
     //endregion
 }

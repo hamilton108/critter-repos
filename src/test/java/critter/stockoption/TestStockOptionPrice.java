@@ -27,7 +27,7 @@ public class TestStockOptionPrice {
         var stockPrice = new StockPrice(curDate, 482.0, 488.7, 481.8, 487.4, 10_000_000);
         stockPrice.setStock(stock);
 
-        var stockOption = new StockOption("YAR2F470", CALL, 470.0, stock, stockOptionUtil);
+        var stockOption = new StockOption("YAR2F470", CALL, 470.0, stock, curDate);
 
 
         var calculator = new BlackScholes();

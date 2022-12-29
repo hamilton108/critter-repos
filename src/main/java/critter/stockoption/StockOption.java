@@ -12,10 +12,11 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class StockOption implements vega.financial.StockOption {
 
-    private StockOptionUtil stockOptionUtil;
-    private final Pattern p = Pattern.compile("\\D+(\\d\\D)\\d+");
+    //private StockOptionUtil stockOptionUtil;
     private LocalDate currentDate;
+    private final Pattern p = Pattern.compile("\\D+(\\d\\D)\\d+");
     private Stock stock;
+
 
     public static int BUY = 1;
     public static int SELL = 2;
@@ -33,12 +34,12 @@ public class StockOption implements vega.financial.StockOption {
                        OptionType opType,
                        double x,
                        Stock stock,
-                       StockOptionUtil stockOptionUtil) {
+                   LocalDate currentDate) {
         this.ticker = ticker;
         this.opType = opType;
         this.x = x;
         this.stock = stock;
-        this.stockOptionUtil = stockOptionUtil;
+        this.currentDate = currentDate;
     }
 
     /*
@@ -200,6 +201,7 @@ public class StockOption implements vega.financial.StockOption {
         ticker = value;
     }
 
+    /*
     public void setStockOptionUtil(StockOptionUtil stockOptionUtil) {
         this.stockOptionUtil = stockOptionUtil;
     }
@@ -207,12 +209,15 @@ public class StockOption implements vega.financial.StockOption {
     public StockOptionUtil getStockOptionUtil() {
         return stockOptionUtil;
     }
+     */
 
     public LocalDate getCurrentDate() {
+        /*
         if (currentDate == null) {
             //currentDate = getExpiry().minusDays(60);
             currentDate = stockOptionUtil.getCurrentDate();
         }
+         */
         return currentDate;
     }
 
