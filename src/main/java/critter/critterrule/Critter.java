@@ -33,6 +33,12 @@ public class Critter {
         this.status = value;
     }
 
+    public CritterEnum getStatusEnum() {
+        return CritterEnum.valueOf(status);
+    }
+    public void setStatusEnum(CritterEnum value) {
+        status = value.getStatus();
+    }
     //----------------- critterType -------------------
     public int getCritterType() {
         return critterType;

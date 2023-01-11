@@ -20,6 +20,16 @@ public class TestCritters {
     }
 
     @Test
+    public void testAcceptRule_denyrules_diffFromBought() {
+        AcceptRule acc = new AcceptRule(7, 2.0, RuleTypeEnum.DFB.getKind()) ;
+        var d1 = new DenyRule(5, 12.0, RuleTypeEnum.OP_ROOF.getKind(), "y", "n");
+        acc.addDenyRule(d1);
+
+        SellRuleArgs args = new SellRuleArgs(1.9,0,0,0);
+        assertThat(acc.pass(args)).isFalse();
+    }
+
+    @Test
     public void testAcceptRule_diffFromWatermark() {
         AcceptRule acc = new AcceptRule(6, 2.0, RuleTypeEnum.DFW.getKind()) ;
         SellRuleArgs args = new SellRuleArgs(0,1.9,0,0);

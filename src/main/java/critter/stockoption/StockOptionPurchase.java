@@ -2,19 +2,14 @@ package critter.stockoption;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import critter.critterrule.Critter;
-import critter.critterrule.SellRuleArgs;
-import critter.stock.StockPrice;
-import vega.financial.calculator.OptionCalculator;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StockOptionPurchase {
     //region Init
-    private OptionCalculator calculator;
     private int oid;
     private LocalDate localDx;
     private int status;
@@ -95,26 +90,6 @@ public class StockOptionPurchase {
     public void setX(double value) {
         x = value;
     }
-    //--------------------------------------------------
-    //------------- ivBuy
-    //--------------------------------------------------
-    /*
-    private Optional<Double> _ivBuy = null;
-    public Optional<Double> getIvBuy() {
-        if (_ivBuy == null) {
-            try {
-                //_ivBuy = Optional.of(calculator.iv(this,Derivative.BUY));
-            }
-            catch (BinarySearchException ex) {
-                System.out.println(String.format("[%s] %s",getTicker(),ex.getMessage()));
-                _ivBuy = Optional.empty();
-            }
-        }
-        return _ivBuy;
-    }
-    //*/
-
-
     public int getStatus() {
         return status;
     }
@@ -155,12 +130,6 @@ public class StockOptionPurchase {
     public void setTicker(String ticker) {
         this.ticker = ticker;
     }
-
-    /*
-    public String getOptionName() {
-        return optionName;
-    }
-    */
 
     public void setOptionName(String optionName) {
         this.optionName = optionName;
@@ -210,25 +179,20 @@ public class StockOptionPurchase {
     public void setOptionType(String optionType) {
         this.optionType = optionType;
     }
-
-    public void setCalculator(OptionCalculator calculator) {
-        this.calculator = calculator;
-    }
     //endregion Properties
 
-    //region Diverse
-    /*
-    public Optional<DerivativePrice> getDerivativePrice() {
-        return repository.findDerivativePrice(new Tuple<>(ticker,optionName));
+    private double spot;
+    public void setSpot(double value) {
+        spot = value;
     }
-    */
-    public StockPrice  getSpot() {
-        return null; //repository.stockPrice(ticker);
+    public double getSpot() {
+        return spot;
     }
     private Double _watermark = null;
+    public void setWatermark(double value) {
+        _watermark = value;
+    }
     public Double getWatermark() {
-        //if (price == null) return null;
-
         if ((_watermark == null) || (stockOptionBuy > _watermark)) {
             _watermark = stockOptionBuy;
         }
@@ -246,17 +210,6 @@ public class StockOptionPurchase {
         //endregion Obsolete
         return _watermark;
     }
-
-    /*
-    public Derivative getMyDerivative() {
-        return myDerivative;
-    }
-
-    public void setMyDerivative(Derivative myDerivative) {
-        this.myDerivative = myDerivative;
-    }
-    //*/
-
 
     //endregion
 
@@ -281,6 +234,7 @@ public class StockOptionPurchase {
 
         return sales.stream().mapToLong(StockOptionSale::getVolume).sum();
     }
+    /*
     public void addSale(StockOptionSale sale) {
         if (sales == null) {
             sales = new ArrayList<>();
@@ -290,17 +244,14 @@ public class StockOptionPurchase {
             status = 2;
         }
     }
+    */
+
     public boolean isFullySold() {
         return volumeSold() < volume ? false : true;
     }
 
+    /*
     private SellRuleArgs collectArgs() {
-        //StockOptionPrice p = getDerivativePrice();
-        /*
-        if (p == null) {
-            return null;
-        }
-         */
         StockPrice spot = getSpot();
         if (spot == null) {
             return null;
@@ -316,6 +267,7 @@ public class StockOptionPurchase {
         SellRuleArgs result = new SellRuleArgs(dfb,dfw,spot.getCls(),getPrice());
         return result;
     }
+    */
 
     public void inspect() {
         System.out.println("\n\n********************************* Critters **********************************");
@@ -333,6 +285,7 @@ public class StockOptionPurchase {
     //endregion Utility Methods
 
     //region interface OptionPurchase
+    /*
     public List<Critter> acceptedForSale() {
         List<Critter> result = new ArrayList<>();
         if (isFullySold()) {
@@ -350,6 +303,7 @@ public class StockOptionPurchase {
         });
         return result;
     }
+    */
 
     public String getOptionName() {
         return optionName;
