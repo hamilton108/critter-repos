@@ -124,7 +124,8 @@ public class Critter {
     }
 
     public void inspect() {
-        System.out.printf("\t[%d] Critter\n", oid);
+        System.out.printf("\t[%d] Critter, status: %d, purchase id: %d, sale id: %d\n",
+                oid, status, purchaseId, saleId);
         if (acceptrules == null || acceptrules.size() == 0) {
             System.out.println("\t\tNo accept rules");
         }

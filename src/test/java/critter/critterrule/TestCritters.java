@@ -5,6 +5,42 @@ import static  org.assertj.core.api.Assertions.assertThat;
 
 
 public class TestCritters {
+
+    @Test
+    public void testSelRuleArgs_equals() {
+        double pb = 0.2;
+        double pw = 0.0;
+        double ps = 30.4;
+        double po = 10.4;
+        var a = new SellRuleArgs(pb+0.00002,pw, ps, po);
+        var b = new SellRuleArgs(pb,pw, ps, po);
+        assertThat(a).isEqualTo(b);
+        var c = new SellRuleArgs(pb+0.4,pw, ps, po);
+        assertThat(a).isNotEqualTo(c);
+    }
+
+    @Test
+    public void testAccValue_description() {
+        AcceptRule acc = new AcceptRule(7, 2.0, RuleTypeEnum.DFB.getKind()) ;
+
+        assertThat(acc.getRtypDesc()).isEqualTo("Diff from bought");
+    }
+
+    @Test
+    public void testCritterEnum() {
+
+       var critter = new Critter();
+
+        assertThat(critter.getStatus()).isEqualTo(0);
+        assertThat(critter.getStatusEnum()).isEqualTo(CritterEnum.NA);
+
+        critter.setStatusEnum(CritterEnum.ACTIVE);
+        assertThat(critter.getStatus()).isEqualTo(7);
+
+        critter.setStatusEnum(CritterEnum.CRITTER_SOLD);
+        assertThat(critter.getStatus()).isEqualTo(9);
+
+    }
     //---------------------------------------------------------------------------
     //------------------------- ACCEPT RULES ------------------------------------
     //---------------------------------------------------------------------------

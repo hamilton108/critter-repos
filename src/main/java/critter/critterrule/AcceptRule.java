@@ -90,6 +90,9 @@ public class AcceptRule extends AbstractRule {
     }
 
     public String getRtypDesc() {
+        if (rtypDesc == null) {
+            rtypDesc = RuleTypeEnum.valueOf(rtyp).getDescription();
+        }
         return rtypDesc;
     }
 
@@ -147,7 +150,7 @@ public class AcceptRule extends AbstractRule {
     }
 
     public void inspect() {
-        System.out.printf("\t\t[%d] Accept rule - rtyp: %s, accValue: %.2f, active: %s  \n", oid, rtypDesc, accValue, active);
+        System.out.printf("\t\t[%d] Accept rule - rtyp: %s, accValue: %.2f, active: %s  \n", oid, getRtypDesc(), accValue, active);
         if (denyRules == null || denyRules.size() == 0) {
             System.out.println("\t\t\tNo deny rules");
         }

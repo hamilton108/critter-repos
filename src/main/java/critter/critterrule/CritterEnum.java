@@ -1,9 +1,10 @@
 package critter.critterrule;
 
 public enum CritterEnum {
+    NA(0, "Critter status not set"),
     OPTION_FULLY_SOLD(2, "Option fully sold"),
     ACTIVE (7, "Critter active"),
-    INACTIVE (8, "Critter active"),
+    INACTIVE (8, "Critter inactive"),
     CRITTER_SOLD(9, "Critter sold");
 
     private final int status;
