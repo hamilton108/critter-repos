@@ -3,7 +3,7 @@ package critter.utils;
 import critter.util.StockOptionUtil;
 import oahu.dto.Tuple2;
 import oahu.dto.Tuple3;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import vega.financial.StockOption;
 
 import java.time.LocalDate;

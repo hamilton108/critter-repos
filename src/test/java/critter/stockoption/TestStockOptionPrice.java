@@ -3,8 +3,8 @@ package critter.stockoption;
 import critter.stock.Stock;
 import critter.stock.StockPrice;
 import critter.util.StockOptionUtil;
-import org.junit.Test;
-import org.junit.Before;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 import vega.financial.calculator.BlackScholes;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ public class TestStockOptionPrice {
     LocalDate curDate = LocalDate.of(2022, 5, 25);
     StockOptionUtil stockOptionUtil = new StockOptionUtil(curDate);
 
-    @Before
+    @BeforeAll
     public void init() {
         var stock = new Stock();
         stock.setTicker("YAR");
